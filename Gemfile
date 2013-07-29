@@ -10,6 +10,7 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 1.2' #For building JSON APIs (https://github.com/rails/jbuilder)
 
 group :development, :test do
+  gem 'turn'
   gem 'factory_girl_rails', '~> 4.0'
   gem 'capybara'
 end
