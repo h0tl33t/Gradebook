@@ -52,6 +52,18 @@ class UserTest < ActiveSupport::TestCase
     refute user.valid?, "Not validating presence of password confirmation."
   end
   
+  test 'user has an admin subclass' do
+    assert User.types.include?(Admin)
+  end
+  
+  test 'user has a student subclass' do
+    assert User.types.include?(Student)
+  end
+  
+  test 'user has a teacher subclass' do
+    assert User.types.include?(Teacher)
+  end
+  
   test 'user should be valid with all attributes' do
     user = FactoryGirl.create(:user)
     assert user.valid?, 'User not valid with all attributes.'

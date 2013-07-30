@@ -8,4 +8,16 @@ FactoryGirl.define do
     password 'secret'
     password_confirmation {|user| user.password}
   end
+  
+  factory :admin, {parent: :user, class: 'Admin'} do
+    #Admin-specific associations.
+  end
+  
+  factory :student, {parent: :user, class: 'Student'} do
+    #Student-specific associations.
+  end
+  
+  factory :teacher, {parent: :user, class: 'Teacher'} do
+    #Teacher-specific associations.
+  end
 end
