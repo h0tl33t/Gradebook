@@ -6,5 +6,9 @@ FactoryGirl.define do
     long_title "An Introduction to Mathematics"
     description "10:00 to 10:50AM, M/W/F, 310 Bouke"
     credit_hours 3.0
+    
+    factory :course_with_semester do
+      semester
+    end
   end
 end

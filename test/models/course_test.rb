@@ -25,4 +25,14 @@ class CourseTest < ActiveSupport::TestCase
     course = FactoryGirl.build(:course)
     assert course.valid?, 'Not accepting course with all valid attributes.'
   end
+  
+  test 'belongs to course' do
+    course = FactoryGirl.create(:course_with_semester)
+    assert_respond_to(course, :semester, "Course 'belongs_to Semester' association not configured.")
+  end
+  
+  test 'can scope by semester' do
+    semester_list = FactoryGirl.create_list(:semester_with_courses, 2) #Generate two semesters, each with a set of courses.
+    assert_equal semester_list.first.courses, Course.for_semester(semester_list.first), 'For semester scope is not pulling correct courses for a given semester.'
+  end
 end

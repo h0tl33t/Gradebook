@@ -27,4 +27,14 @@ class SemesterTest < ActiveSupport::TestCase
     semester1 = FactoryGirl.create(:semester, start_date: 25.days.ago, end_date: 10.days.from_now)
     refute semester2.valid?, "Not validating end date overlapping an existing semester's range."
   end
+  
+  test 'can have many courses' do
+    semester = FactoryGirl.create(:semester_with_courses)
+    assert_respond_to(semester, :courses, "Semester 'has_many courses' association not configured correctly.")
+  end
+  
+  test 'has counter_cache on associated courses' do
+    semester = FactoryGirl.create(:semester_with_courses)
+    assert_respond_to(semester, :courses_count, 'Semester counter_cache on courses not correctly configured.')
+  end
 end
