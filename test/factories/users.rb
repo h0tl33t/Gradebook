@@ -2,9 +2,9 @@
 
 FactoryGirl.define do
   factory :user do
-    first_name 'Bobby'
-    last_name 'Brokaw'
-    email 'Bobby.Brokaw@test.com'.downcase
+    sequence(:first_name) {|i| "User#{i}"}
+    sequence(:last_name) {|i| "Test#{i}"}
+    sequence(:email) {|i| "user#{i}@test.com".downcase}
     password 'secret'
     password_confirmation {|user| user.password}
   end
@@ -14,7 +14,15 @@ FactoryGirl.define do
   end
   
   factory :student, {parent: :user, class: 'Student'} do
-    #Student-specific associations.
+    factory :student_with_enrollments do
+      ignore do
+        enrollments_count 5
+      end
+      
+      after(:create) do |student, evaluator|
+        FactoryGirl.create_list(:enrollment, evaluator.enrollments_count, student: student)
+      end
+    end
   end
   
   factory :teacher, {parent: :user, class: 'Teacher'} do

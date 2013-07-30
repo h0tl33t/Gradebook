@@ -38,8 +38,8 @@ class UserTest < ActiveSupport::TestCase
   end
   
   test 'email must be unique in order to save' do
-    user1 = FactoryGirl.create(:user)
-    assert_raise(ActiveRecord::RecordInvalid) {FactoryGirl.create(:user)}
+    user1 = FactoryGirl.create(:user, email: 'test@test.com')
+    assert_raise(ActiveRecord::RecordInvalid) {FactoryGirl.create(:user, email: 'test@test.com')}
   end
   
   test 'user invalid without a password' do

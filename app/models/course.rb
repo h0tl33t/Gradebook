@@ -1,7 +1,9 @@
 class Course < ActiveRecord::Base
   belongs_to :semester, counter_cache: true
+  has_many :enrollments
+  has_many :enrolled_students, through: :enrollments, source: :student
   
-  validates :name, presence: true#, length: {maximum: 10}
+  validates :name, presence: true, uniqueness: true#, length: {maximum: 10}
   validates :long_title, presence: true#, {maximum: 75}
   validates :description, presence: true
   validate :acceptable_value_for_credit_hours

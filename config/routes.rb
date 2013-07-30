@@ -1,4 +1,6 @@
 Gradebook::Application.routes.draw do
+  resources :enrollments
+
   resources :courses
 
   resources :semesters
