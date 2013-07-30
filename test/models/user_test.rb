@@ -42,6 +42,16 @@ class UserTest < ActiveSupport::TestCase
     assert_raise(ActiveRecord::RecordInvalid) {FactoryGirl.create(:user)}
   end
   
+  test 'user invalid without a password' do
+    user = FactoryGirl.build(:user, password: nil)
+    refute user.valid?, 'Not validating presence of password.'
+  end
+  
+  test 'user invalid without password confirmation' do
+    user = FactoryGirl.build(:user, password_confirmation: nil)
+    refute user.valid?, "Not validating presence of password confirmation."
+  end
+  
   test 'user should be valid with all attributes' do
     user = FactoryGirl.create(:user)
     assert user.valid?, 'User not valid with all attributes.'
