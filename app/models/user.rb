@@ -13,20 +13,12 @@ class User < ActiveRecord::Base
   end
   
   def courses_for(semester)
-    pull_courses_for(semester)
-  end
-  
-  def pull_courses_for(semester)
     Course.for_semester(semester)
   end
   
   def self.types
     descendants
   end
-
-  #def self.inherited(subclass)
-  #  update_column(:type, subclass)
-  #end
 end
 
 #Require statements to load necessary files so User.types (alias of Class.descendents for User) returns valid values.

@@ -4,7 +4,7 @@ class Student < User
   
   scope :with_grades_for, lambda {|course| joins(:enrollments).where(enrollments: {course: course}).select('users.*, enrollments.grade as grade')}
   
-  def pull_courses_for(semester)
+  def courses_for(semester)
     enrolled_courses.for_semester(semester).with_grades_for(self)
   end
 end

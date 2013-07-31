@@ -18,11 +18,11 @@ class TeacherTest < ActiveSupport::TestCase
     refute Course.exists?(course), 'Not destroying associated courses when teacher is destroyed.'
   end
   
-  test 'pull_courses_for as a Teacher returns all courses taught for a given semester' do
+  test 'courses_for as a Teacher returns all courses taught for a given semester' do
     teacher = FactoryGirl.create(:teacher_with_courses)
     semester = FactoryGirl.create(:semester)
     teacher.courses.each {|course| course.semester = semester}
-    assert_equal Course.for_semester(semester).where(teacher: teacher).to_a, teacher.pull_courses_for(semester),
+    assert_equal Course.where(semester: semester).where(teacher: teacher).to_a, teacher.courses_for(semester),
       'Not pulling all courses taught for a given semester.'
   end
 end
