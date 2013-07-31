@@ -76,6 +76,24 @@ class CourseTest < ActiveSupport::TestCase
     assert_equal course.enrollments.size, course.enrollment_count, 'Not returning correct enrollment count.'
   end
   
+  test 'enrollment count increments when a new course is added' do
+    course = FactoryGirl.create(:course_with_enrollments)
+    course.reload
+    initial_count = course.enrollment_count
+    FactoryGirl.create(:enrollment, course: course)
+    course.reload
+    refute_equal initial_count, course.enrollment_count, 'Not incrementing when a course is added.'
+  end
+  
+  test 'enrollment count decrements when a course a deleted' do
+    course = FactoryGirl.create(:course_with_enrollments)
+    course.reload
+    initial_count = course.enrollment_count
+    course.enrollments.last.destroy
+    course.reload
+    refute_equal initial_count, course.enrollment_count, 'Not decrementing when a course is removed.'
+  end
+  
   test 'belongs to a teacher' do
     course = FactoryGirl.create(:course)
     assert_respond_to(course, :teacher, "Course 'belongs_to teacher' association not configured correctly.")
