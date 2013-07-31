@@ -37,4 +37,19 @@ class StudentTest < ActiveSupport::TestCase
     courses = student.courses_for(semester)
     assert_respond_to(courses.first, :student_grade, 'Student grade is not accessible from courses returned from courses_for.')
   end
+  
+  test 'student is not an admin' do
+    student = FactoryGirl.create(:student)
+    refute student.admin?, 'Student passing as an admin.'
+  end
+  
+  test 'student is not a teacher' do
+    student = FactoryGirl.create(:student)
+    refute student.teacher?, 'Student passing as a teacher.'
+  end
+  
+  test 'student is a student' do
+    student = FactoryGirl.create(:student)
+    assert student.student?, 'Student not identified as a student.'
+  end
 end

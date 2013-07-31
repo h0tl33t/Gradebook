@@ -19,6 +19,17 @@ class User < ActiveRecord::Base
   def self.types
     descendants
   end
+  
+  def method_missing(name, *args)
+    if name.to_s.last == '?' #Catch unknown boolean methods.
+      class_name = name.to_s.delete('?').capitalize.constantize #Classify the method name.
+      #Check to see if the Classify'd method name is a subclass of User (Admin, Teacher, Student).  If so, check if caller.class == class_name.  Else, super.
+      User.types.include?(class_name) ? self.class == class_name : super
+      #Enables us to dynamically check if a current user is a certain User type: current_user.admin?, current_user.teacher?, current_user.student?
+    else
+      super
+    end
+  end
 end
 
 #Require statements to load necessary files so User.types (alias of Class.descendents for User) returns valid values.

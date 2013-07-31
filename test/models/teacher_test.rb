@@ -25,4 +25,19 @@ class TeacherTest < ActiveSupport::TestCase
     assert_equal Course.where(semester: semester).where(teacher: teacher).to_a, teacher.courses_for(semester),
       'Not pulling all courses taught for a given semester.'
   end
+  
+  test 'teacher is not an admin' do
+    teacher = FactoryGirl.create(:teacher)
+    refute teacher.admin?, 'Teacher passing as an admin.'
+  end
+  
+  test 'teacher is not a student' do
+    teacher = FactoryGirl.create(:teacher)
+    refute teacher.student?, 'Teacher passing as a student.'
+  end
+  
+  test 'teacher is a teacher' do
+    teacher = FactoryGirl.create(:teacher)
+    assert teacher.teacher?, 'Teacher not identified as a teacher.'
+  end
 end
