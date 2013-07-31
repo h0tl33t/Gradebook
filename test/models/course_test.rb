@@ -16,6 +16,16 @@ class CourseTest < ActiveSupport::TestCase
     refute course.valid?, 'Not validating presence of long title.'
   end
   
+  test 'name is invalid if over 10 characters long' do
+    course = FactoryGirl.build(:course, name: "#{''.ljust(11,'i')}")
+    refute course.valid?, 'Not validating length of name.'
+  end
+  
+  test 'long title is invalid if over 75 characters long' do
+    course = FactoryGirl.build(:course, long_title: "#{''.ljust(76,'i')}")
+    refute course.valid?, 'Not validating length of long_title.'
+  end
+  
   test 'credit hours invalid unless between 0.5 and 4.0' do
     course = FactoryGirl.build(:course, credit_hours: 5.0)
     refute course.valid?, 'Not validating credit hours against valid range (0.5 to 4.0).'
