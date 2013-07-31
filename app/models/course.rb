@@ -1,5 +1,6 @@
 class Course < ActiveRecord::Base
   belongs_to :semester, counter_cache: true
+  belongs_to :teacher
   has_many :enrollments
   has_many :enrolled_students, through: :enrollments, source: :student
   

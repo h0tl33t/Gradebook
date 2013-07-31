@@ -26,6 +26,14 @@ FactoryGirl.define do
   end
   
   factory :teacher, {parent: :user, class: 'Teacher'} do
-    #Teacher-specific associations.
+    factory :teacher_with_courses do
+      ignore do
+        courses_count 10
+      end
+      
+      after(:create) do |teacher, evaluator|
+        FactoryGirl.create_list(:course, evaluator.courses_count, teacher: teacher)
+      end
+    end
   end
 end

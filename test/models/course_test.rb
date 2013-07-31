@@ -37,7 +37,7 @@ class CourseTest < ActiveSupport::TestCase
   end
   
   test 'belongs to semester' do
-    course = FactoryGirl.create(:course_with_semester)
+    course = FactoryGirl.create(:course)
     assert_respond_to(course, :semester, "Course 'belongs_to semester' association not configured correctly.")
   end
   
@@ -59,5 +59,10 @@ class CourseTest < ActiveSupport::TestCase
   test 'has counter cache on associated enrollments' do
     course = FactoryGirl.create(:course_with_enrollments)
     assert_respond_to(course, :enrollments_count, 'Course counter cache on association enrollments not configured correctly.')
+  end
+  
+  test 'belongs to a teacher' do
+    course = FactoryGirl.create(:course)
+    assert_respond_to(course, :teacher, "Course 'belongs_to teacher' association not configured correctly.")
   end
 end

@@ -3,10 +3,13 @@
 FactoryGirl.define do
   factory :semester do
     name 'Fall 2013'
-    sequence(:start_date) {|i| "2013-07-#{i}"}
-    sequence(:end_date) {|i| "2013-07-#{i}"}
+    start_date '2013-07-01'
+    end_date '2013-12-31'
     
     factory :semester_with_courses do
+      sequence(:start_date) {|i| "2013-07-#{i}"}
+      sequence(:end_date) {|i| "2013-07-#{i}"}
+      
       ignore do
         courses_count 10
       end
