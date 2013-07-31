@@ -82,4 +82,11 @@ class CourseTest < ActiveSupport::TestCase
     course.destroy
     refute Enrollment.exists?(enrollment), 'Not destroying associated enrollments.'
   end
+  
+  test 'ability to display all enrolled students with their grades as student.grade' do
+    course = FactoryGirl.create(:course_with_enrollments)
+    assert_equal course.enrolled_students.joins(:enrollments).select('users.*, enrollments.grade as grade').to_a,
+      course.enrolled_students.with_grades_for(course),
+      'Not correctly pulling students with grades for a given course.'
+  end
 end

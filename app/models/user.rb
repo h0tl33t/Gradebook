@@ -8,10 +8,19 @@ class User < ActiveRecord::Base
   
   before_save {|user| user.email.downcase!}
   
+  
+  def courses_for(semester)
+    pull_courses_for(semester)
+  end
+  
+  def pull_courses_for(semester)
+    Course.for_semester(semester)
+  end
+  
   def self.types
     self.descendants
   end
-  
+
   #def self.inherited(subclass)
   #  update_column(:type, subclass)
   #end

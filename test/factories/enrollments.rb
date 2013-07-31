@@ -4,6 +4,6 @@ FactoryGirl.define do
   factory :enrollment do
     student
     course
-    grade 3.7
+    grade GradeHelper.nearest_decimal_grade(Random.new.rand(0.0..4.0))
   end
 end
