@@ -94,4 +94,29 @@ class CourseTest < ActiveSupport::TestCase
       course.enrolled_students.with_grades_for(course),
       'Not correctly pulling students with grades for a given course.'
   end
+  
+  test 'calculates correct average grade' do
+    course = FactoryGirl.create(:course)
+    enrollment1 = FactoryGirl.create(:enrollment, course: course, grade: 3.0)
+    enrollment2 = FactoryGirl.create(:enrollment, course: course, grade: 2.3)
+    enrollment3 = FactoryGirl.create(:enrollment, course: course, grade: 3.7)
+    enrollment4 = FactoryGirl.create(:enrollment, course: course, grade: 4.0)
+    assert_equal 3.25, course.calculate_average_grade, 'Not correctly calculating average grade.'
+  end
+  
+  test 'average_grade holds correct value' do    
+    course = FactoryGirl.create(:course)
+    enrollment1 = FactoryGirl.create(:enrollment, course: course, grade: 1.7)
+    enrollment2 = FactoryGirl.create(:enrollment, course: course, grade: 2.3)
+    enrollment3 = FactoryGirl.create(:enrollment, course: course, grade: 3.3)
+    enrollment4 = FactoryGirl.create(:enrollment, course: course, grade: 4.0)
+    course.calculate_average_grade
+    assert_equal 2.83, course.average_grade, 'Average Grade not returning correct value.'
+  end
+
+  test 'can retrieve average grade as a letter grade' do
+    course = FactoryGirl.create(:course_with_enrollments)
+    avg_grade = course.average_letter_grade
+    assert_kind_of(String, avg_grade, 'Average letter grade not returning grade as a string.')
+  end
 end

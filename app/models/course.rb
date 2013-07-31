@@ -12,6 +12,14 @@ class Course < ActiveRecord::Base
   scope :for_semester, lambda {|semester| where(semester: semester)}
   scope :with_grades_for, lambda {|student| joins(:enrollments).where(enrollments: {student: student}).select('courses.*, enrollments.grade as student_grade')}
   
+  def calculate_average_grade #Must be called via callback in EnrollmentsController, triggering from create, update, and destroy actions.
+    self.average_grade = enrollments.average(:grade).round(2)
+  end
+  
+  def average_letter_grade #Return average_grade in letter grade format.
+    GradeHelper.letter_grade_for(average_grade)
+  end
+  
   def enrollment_count
     enrollments.size
   end
