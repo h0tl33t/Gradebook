@@ -37,4 +37,11 @@ class SemesterTest < ActiveSupport::TestCase
     semester = FactoryGirl.create(:semester_with_courses)
     assert_respond_to(semester, :courses_count, 'Semester counter_cache on courses not correctly configured.')
   end
+  
+  test 'destroying semester also destroys related courses' do
+    semester = FactoryGirl.create(:semester_with_courses)
+    course = semester.courses.first
+    semester.destroy
+    refute Course.exists?(course), 'Not destroying associated courses when semester is destroyed.'
+  end
 end

@@ -65,4 +65,11 @@ class CourseTest < ActiveSupport::TestCase
     course = FactoryGirl.create(:course)
     assert_respond_to(course, :teacher, "Course 'belongs_to teacher' association not configured correctly.")
   end
+  
+  test 'destroying course also destroys associated enrollments' do
+    course = FactoryGirl.create(:course_with_enrollments)
+    enrollment = course.enrollments.first
+    course.destroy
+    refute Enrollment.exists?(enrollment), 'Not destroying associated enrollments.'
+  end
 end

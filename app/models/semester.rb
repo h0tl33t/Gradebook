@@ -1,5 +1,5 @@
 class Semester < ActiveRecord::Base
-  has_many :courses
+  has_many :courses, dependent: :destroy
   
   validates :name, presence: true
   validates :start_date, presence: true

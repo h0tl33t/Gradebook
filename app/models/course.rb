@@ -1,7 +1,7 @@
 class Course < ActiveRecord::Base
   belongs_to :semester, counter_cache: true
   belongs_to :teacher
-  has_many :enrollments
+  has_many :enrollments, dependent: :destroy
   has_many :enrolled_students, through: :enrollments, source: :student
   
   validates :name, presence: true, uniqueness: true#, length: {maximum: 10}
