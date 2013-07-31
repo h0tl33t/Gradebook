@@ -10,13 +10,13 @@ class Enrollment < ActiveRecord::Base
   
   private
   def enrollment_is_unique
-    unless Enrollment.where(student_id: self.student_id).where(course_id: self.course_id).empty?
+    unless Enrollment.where(student_id: student_id).where(course_id: course_id).empty?
       errors.add(:base, 'Students cannot enroll for the same course twice.')
     end
   end
   
   def valid_grade_value
-    unless GradeHelper.valid?(self.grade)
+    unless GradeHelper.valid?(grade)
       errors.add(:base, "Grades must be between 0.0 and 4.0 (if numeric).")
     end
   end

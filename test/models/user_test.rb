@@ -21,6 +21,11 @@ class UserTest < ActiveSupport::TestCase
     refute user.valid?, 'Not validating length of last name.'
   end
   
+  test 'user full name is equivalent to the first name and the last name joined by a space' do
+    user = FactoryGirl.build(:user)
+    assert_equal "#{user.first_name} #{user.last_name}", user.full_name, 'Not correctly pulling and formatting full name.'
+  end
+  
   test 'invalid without an email' do
     user = FactoryGirl.build(:user, email: nil)
     refute user.valid?, 'Not validating presence of email.'

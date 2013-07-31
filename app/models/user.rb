@@ -8,6 +8,9 @@ class User < ActiveRecord::Base
   
   before_save {|user| user.email.downcase!}
   
+  def full_name
+    [first_name, last_name].join(' ')
+  end
   
   def courses_for(semester)
     pull_courses_for(semester)
@@ -18,7 +21,7 @@ class User < ActiveRecord::Base
   end
   
   def self.types
-    self.descendants
+    descendants
   end
 
   #def self.inherited(subclass)
