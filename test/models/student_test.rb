@@ -42,6 +42,6 @@ class StudentTest < ActiveSupport::TestCase
     semester = FactoryGirl.create(:semester)
     courses = student.courses_for(semester)
     assert_equal Course.for_semester(semester).joins(:enrollments).where(enrollments: {student: student}).to_a, student.courses_for(semester),
-      'Not pullig all enrolled courses for a given semester.'
+      'Not pulling all enrolled courses for a given semester.'
   end
 end

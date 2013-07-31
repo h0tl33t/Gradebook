@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'test_helper' 
 
 class TeacherTest < ActiveSupport::TestCase
   test 'User type populates with Teacher when saved' do
