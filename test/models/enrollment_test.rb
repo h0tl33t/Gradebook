@@ -30,4 +30,14 @@ class EnrollmentTest < ActiveSupport::TestCase
     enrollment = FactoryGirl.create(:enrollment)
     assert_raise(ActiveRecord::RecordInvalid) {FactoryGirl.create(:enrollment, student: enrollment.student, course: enrollment.course)}
   end
+  
+  test 'float grade invalid if not between 0.0 and 4.0' do
+    enrollment = FactoryGirl.build(:enrollment, grade: 4.2)
+    refute enrollment.valid?, 'Not validating float grade range.'
+  end
+  
+  test 'letter grade valid between 0.0 and 4.0' do
+    enrollment = FactoryGirl.build(:enrollment, grade: '2.7')
+    assert enrollment.valid?, 'Not accepting valid letter grades.'
+  end
 end
