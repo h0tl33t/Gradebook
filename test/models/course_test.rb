@@ -68,7 +68,12 @@ class CourseTest < ActiveSupport::TestCase
   
   test 'has counter cache on associated enrollments' do
     course = FactoryGirl.create(:course_with_enrollments)
-    assert_respond_to(course, :enrollments_count, 'Course counter cache on association enrollments not configured correctly.')
+    assert_respond_to(course, :enrollment_count, 'Course counter cache on association enrollments not configured correctly.')
+  end
+  
+  test 'returns counter cache value for enrollment count' do
+    course = FactoryGirl.create(:course_with_enrollments)
+    assert_equal course.enrollments.size, course.enrollment_count, 'Not returning correct enrollment count.'
   end
   
   test 'belongs to a teacher' do
