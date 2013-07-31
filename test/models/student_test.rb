@@ -52,4 +52,53 @@ class StudentTest < ActiveSupport::TestCase
     student = FactoryGirl.create(:student)
     assert student.student?, 'Student not identified as a student.'
   end
+  
+  test 'responds to gpa' do
+    student = FactoryGirl.create(:student)
+    assert_respond_to(student, :gpa, 'No student.gpa method was found.')
+  end
+
+  test 'can retrieve gpa from given courses' do
+    student = FactoryGirl.create(:student)
+    semester = FactoryGirl.create(:semester, start_date: 30.days.ago, end_date: 10.days.ago)
+
+    course1 = FactoryGirl.create(:course, semester: semester, credit_hours: 3)
+    course2 = FactoryGirl.create(:course, semester: semester, credit_hours: 4) 
+    course3 = FactoryGirl.create(:course, semester: semester, credit_hours: 3)
+    course4 = FactoryGirl.create(:course, semester: semester, credit_hours: 2.5) 
+    course5 = FactoryGirl.create(:course, semester: semester, credit_hours: 4) #16.5 total credit hours for semester
+
+    enrollment1 = FactoryGirl.create(:enrollment, course: course1, student: student, grade: 2.3) #6.9 credit points
+    enrollment2 = FactoryGirl.create(:enrollment, course: course2, student: student, grade: 4.0) #16 credit points
+    enrollment3 = FactoryGirl.create(:enrollment, course: course3, student: student, grade: 1.7) #5.1 credit points
+    enrollment4 = FactoryGirl.create(:enrollment, course: course4, student: student, grade: 3.0) #7.5 credit points
+    enrollment5 = FactoryGirl.create(:enrollment, course: course5, student: student, grade: 3.7) #14.8 credit points
+    
+    courses = Course.where(semester: semester).joins(:enrollments).where(enrollments: {student: student}).select('courses.*, enrollments.grade as student_grade')
+    
+    #GPA should be credit points (50.3) divided by total credit hours (16.5) with the result rounded to two decimal places => 3.05
+    assert_equal 3.05, student.calculate_gpa_for(courses), 'Not correctly calculating GPA from given courses.'
+  end
+
+  test 'GPA is set during courses_for method call' do
+    student = FactoryGirl.create(:student)
+    semester = FactoryGirl.create(:semester, start_date: 30.days.ago, end_date: 10.days.ago)
+
+    course1 = FactoryGirl.create(:course, semester: semester, credit_hours: 3)
+    course2 = FactoryGirl.create(:course, semester: semester, credit_hours: 4) 
+    course3 = FactoryGirl.create(:course, semester: semester, credit_hours: 3)
+    course4 = FactoryGirl.create(:course, semester: semester, credit_hours: 2.5) 
+    course5 = FactoryGirl.create(:course, semester: semester, credit_hours: 4) #16.5 total credit hours for semester
+
+    enrollment1 = FactoryGirl.create(:enrollment, course: course1, student: student, grade: 2.3) #6.9 credit points
+    enrollment2 = FactoryGirl.create(:enrollment, course: course2, student: student, grade: 4.0) #16 credit points
+    enrollment3 = FactoryGirl.create(:enrollment, course: course3, student: student, grade: 1.7) #5.1 credit points
+    enrollment4 = FactoryGirl.create(:enrollment, course: course4, student: student, grade: 3.0) #7.5 credit points
+    enrollment5 = FactoryGirl.create(:enrollment, course: course5, student: student, grade: 3.7) #14.8 credit points
+
+    student.courses_for(semester)
+
+    #GPA should be credit points (50.3) divided by total credit hours (16.5) with the result rounded to two decimal places => 3.05
+    assert_equal 3.05, student.gpa, 'Not calculating and setting GPA during courses_for method call.'
+  end
 end
