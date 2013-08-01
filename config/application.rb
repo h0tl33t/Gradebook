@@ -1,6 +1,7 @@
 require File.expand_path('../boot', __FILE__)
-
 require 'rails/all'
+
+#lib_files = Dir.glob("#{Rails.root.to_s}/lib/*.rb").map { |file| require file[]}
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -19,5 +20,7 @@ module Gradebook
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
+    
+    config.autoload_paths += Dir["#{config.root}/lib"]
   end
 end

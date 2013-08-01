@@ -5,3 +5,9 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+#Create an admin
+Admin.create(first_name: 'Robert', last_name: 'Baratheon', email: 'usurping@gmail.com', password: 'sekretz', password_confirmation: 'sekretz')
+
+#Generate test data.
+DataGenerator.new.all #WARNING: Creates a lot of data.  Takes a minute or two.
