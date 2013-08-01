@@ -33,8 +33,8 @@ class DataGenerator
     teachers = user(type: Teacher, quantity: 50)
     students = user(type: Student, quantity: 200)
     semesters = semester(quantity: 8)
-    courses = course(quantity: 100, semesters: semesters.map(&:id), teachers: teachers.map(&:id))
-    enrollment(students: students.map(&:id), courses: courses.map(&:id), courses_per_student: 25)
+    courses = course(quantity: 200, semesters: semesters.map(&:id), teachers: teachers.map(&:id))
+    enrollment(students: students.map(&:id), courses: courses.map(&:id), courses_per_student: 40)
   end
   
   private

@@ -2,10 +2,10 @@ class SemesterData
   attr_accessor :semesters
   
   def initialize(options = {})
-    @quantity = options[:quantity] || 1 #Given default of 120 days, looking at 4 years worth of semesters by default.
+    @quantity = options[:quantity] || 1
     @days_long = options[:days_long] || 120
     
-    @occupied_date_ranges = []
+    @occupied_date_ranges = Semester.select(:start_date, :end_date).map {|semester| (semester.start_date..semester.end_date)}
     @future = true #Use to swap back and forth, adding a semester in front and then behind, ensuring there's an equal distribution of past and future semesters.   
     
     @semesters = []
@@ -26,11 +26,11 @@ class SemesterData
       end_date = (@days_long/2).days.from_now
     elsif @future #Current semester already set, tack a new semester on to the end of last semester tracked.
       start_date = @occupied_date_ranges.last.last + 1.day
-      end_date = start_date + @days_long
+      end_date = start_date + @days_long.days
       @future = false #Swap so next semester is created for the past.
     else#Current semester already set, tack a new semester before all other tracked semesters.
       end_date = @occupied_date_ranges.first.first - 1.day
-      start_date = end_date - @days_long
+      start_date = end_date - @days_long.days
       @future = true #Swap so next semester is created for the future.
     end
     
@@ -39,7 +39,7 @@ class SemesterData
   end
   
   def generate_semester_name(start_date)
-    "#{season_for(start_date)} #{start_date.year} (#{@days_long} Days)"
+    "#{season_for(start_date)} #{start_date.year}"
   end
   
   def track_date_range(range)
@@ -48,7 +48,7 @@ class SemesterData
   end
   
   def season_for(start_date)
-    mid_point_month = (start_date + @days_long).month
+    mid_point_month = (start_date + (@days_long/2).days).month
     case mid_point_month
     when (3..5)
       'Spring'

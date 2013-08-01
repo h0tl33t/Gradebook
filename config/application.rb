@@ -1,8 +1,6 @@
 require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 
-#lib_files = Dir.glob("#{Rails.root.to_s}/lib/*.rb").map { |file| require file[]}
-
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env)
