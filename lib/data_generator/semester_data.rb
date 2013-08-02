@@ -6,7 +6,7 @@ module DataGenerator
       @quantity = options[:quantity] || 1
       @days_long = options[:days_long] || 120
     
-      @occupied_date_ranges = Semester.select(:start_date, :end_date).map {|semester| (semester.start_date..semester.end_date)}
+      @occupied_date_ranges = Semester.order(:start_date).select(:start_date, :end_date).map {|semester| (semester.start_date..semester.end_date)}
       @future = true #Use to swap back and forth, adding a semester in front and then behind, ensuring there's an equal distribution of past and future semesters.   
     
       @semesters = []

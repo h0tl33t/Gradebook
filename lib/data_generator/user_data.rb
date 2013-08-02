@@ -4,6 +4,10 @@ module DataGenerator
   
     def initialize(options = {})
       @quantity = options[:quantity] || 1
+      @first_name = options[:first_name]
+      @last_name = options[:last_name]
+      @email = options[:email]
+      @password = options[:password]
       @random = Random.new
     
       @users = []
@@ -11,10 +15,10 @@ module DataGenerator
     end
   
     def generate_user_data_hash 
-      first_name = FIRST_NAMES.sample
-      last_name = LAST_NAMES.sample
-      email = generate_email(first_name, last_name)
-      password = 'sekretz'
+      first_name = @first_name || FIRST_NAMES.sample
+      last_name = @last_name || LAST_NAMES.sample
+      email = @email || generate_email(first_name, last_name)
+      password = @password || 'sekretz'
       {first_name: first_name, last_name: last_name, email: email, password: password, password_confirmation: password}
     end
   

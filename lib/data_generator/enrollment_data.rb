@@ -3,25 +3,26 @@ module DataGenerator
     attr_accessor :enrollments
   
     def initialize(options = {})
-      students = options[:students]
-      @courses = options[:courses]
-      @per_student = options[:courses_per_student] || @courses.size
+      student_ids = options[:students]
+      @course_ids = options[:courses]
+      @grade = options[:grade]
+      @per_student = options[:courses_per_student] || @course_ids.size
       @random = Random.new
     
       @enrollments = []
-      students.each {|student| @enrollments << generate_enrollments_for(student)}
+      student_ids.each {|student_id| @enrollments << generate_enrollments_for(student_id)}
       @enrollments.flatten!
     end
   
-    def generate_enrollments_for(student)
-      enrollments = @courses.sample(@per_student).inject([]) do |collection, course|
-        collection << {student_id: student, course_id: course, grade: generate_grade}
+    def generate_enrollments_for(student_id)
+      enrollments = @course_ids.sample(@per_student).inject([]) do |collection, course_id|
+        collection << {student_id: student_id, course_id: course_id, grade: @grade || generate_grade}
         collection
       end
     end
   
     def generate_grade
-      @random.rand(0.0..4.0).round(1)
+      GradeHelper.nearest_decimal_grade(@random.rand(0.0..4.0).round(1))
     end
   end
 end

@@ -3,12 +3,15 @@ module DataGenerator
     attr_accessor :courses  
       def initialize(options = {})
       @quantity = options[:quantity] || 1
-      @semesters = options[:semesters]
-      @teachers = options[:teachers]
+      @semester_ids = options[:semesters]
+      @teacher_ids = options[:teachers]
+      @per_teacher = options[:courses_per_teacher] || @semester_ids.size
       @random = Random.new
     
       @courses = []
-      @quantity.times {@courses << generate_course_data_hash}
+      #@quantity.times {@courses << generate_course_data_hash}
+      @teacher_ids.each {|teacher_id| @courses << generate_courses_for(teacher_id)}
+      @courses.flatten!
     end
   
     COURSE_TYPES = {'MATH' => 'Mathematics',
@@ -31,13 +34,20 @@ module DataGenerator
                     'ACC' => 'Accounting',
                     'BUS' => 'Business'}
 
-    def generate_course_data_hash
+    def generate_courses_for(teacher_id) #For a given teacher, generate one course per 
+      courses = @semester_ids.sample(@per_teacher).inject([]) do |collection, semester_id|
+        collection << generate_course_data_hash_with(teacher_id, semester_id)
+        collection
+      end
+    end
+    
+    def generate_course_data_hash_with(teacher_id, semester_id)
       base_name = COURSE_TYPES.keys.sample
       number = @random.rand(101..499)
       name, long_title = generate_course_names(base_name, number)
       credit_hours = generate_credit_hours
       description = generate_course_description(credit_hours)
-      {name: name, long_title: long_title, credit_hours: credit_hours, description: description, semester_id: @semesters.sample, teacher_id: @semesters.sample}
+      {name: name, long_title: long_title, credit_hours: credit_hours, description: description, semester_id: semester_id, teacher_id: teacher_id}
     end
 
     def generate_course_names(base_name, number)
