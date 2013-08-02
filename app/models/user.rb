@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   has_secure_password
   
   before_save {|user| user.email.downcase!}
+  before_save :create_remember_token
   
   def full_name
     [first_name, last_name].join(' ')
@@ -17,7 +18,7 @@ class User < ActiveRecord::Base
   end
   
   def self.types
-    descendants
+    [Admin, Teacher, Student]
   end
   
   def method_missing(name, *args)
@@ -30,9 +31,9 @@ class User < ActiveRecord::Base
       super
     end
   end
+  
+  private
+  def create_remember_token
+    self.remember_token = SecureRandom.urlsafe_base64
+  end
 end
-
-#Require statements to load necessary files so User.types (alias of Class.descendents for User) returns valid values.
-require 'admin'
-require 'teacher'
-require 'student'

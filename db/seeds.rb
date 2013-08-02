@@ -10,4 +10,4 @@
 Admin.create(first_name: 'Robert', last_name: 'Baratheon', email: 'usurping@gmail.com', password: 'sekretz', password_confirmation: 'sekretz')
 
 #Generate test data.
-DataGenerator.new.all #WARNING: Creates a lot of data.  Takes a minute or two.
+DataGenerator::Core.new.all #WARNING: Creates a lot of data.  Takes a minute or two.
