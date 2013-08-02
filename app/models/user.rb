@@ -1,13 +1,14 @@
 class User < ActiveRecord::Base
+  attr_accessor :password, :password_confirmation
+  
   validates :first_name, presence: true, length: {maximum: 25}
   validates :last_name, presence: true, length: {maximum: 25}
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  validates :email, presence: true, format: {with: VALID_EMAIL_REGEX}, uniqueness: {case_sensitive: false}, confirmation: true
+  validates :email, presence: true, format: {with: VALID_EMAIL_REGEX}, uniqueness: {case_sensitive: false}
+  validates :password, presence: true, confirmation: true, on: :create
   
-  has_secure_password
-  
+  before_save :encrypt_password
   before_save {|user| user.email.downcase!}
-  before_save :create_remember_token
   
   def full_name
     [first_name, last_name].join(' ')
@@ -15,6 +16,26 @@ class User < ActiveRecord::Base
   
   def courses_for(semester)
     Course.for_semester(semester)
+  end
+  
+  def admin?
+    false
+  end
+  
+  def encrypt_password
+    if password.present?
+      self.password_salt = BCrypt::Engine.generate_salt
+      self.password_hash = BCrypt::Engine.hash_secret(password, password_salt)
+    end
+  end
+  
+  def self.authenticate(email, password)
+    user = find_by(email: email)
+    if user && user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
+      user
+    else
+      nil
+    end
   end
   
   def self.types
@@ -30,10 +51,5 @@ class User < ActiveRecord::Base
     else
       super
     end
-  end
-  
-  private
-  def create_remember_token
-    self.remember_token = SecureRandom.urlsafe_base64
   end
 end

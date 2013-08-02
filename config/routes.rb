@@ -1,5 +1,5 @@
 Gradebook::Application.routes.draw do
-  root 'courses#index'
+  root 'home#index'
   
   resources :enrollments
 
@@ -12,6 +12,7 @@ Gradebook::Application.routes.draw do
   resources :sessions, only: [:new, :create, :destroy]
   get '/signin', to: 'sessions#new'
   get '/signout', to: 'sessions#destroy'
+  get '/signup', to: 'users#new'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

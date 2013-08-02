@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :admin_only, only: [:index]
+  before_action :correct_user, only: [:show, :edit, :update]
 
   # GET /users
   # GET /users.json
@@ -28,6 +30,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
+        sign_in @user
         format.html { redirect_to @user, notice: 'User was successfully created.' }
         format.json { render action: 'show', status: :created, location: @user }
       else
@@ -64,7 +67,23 @@ class UsersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      @user = User.find(params[:id])
+      begin
+        @user = User.find(params[:id])
+      rescue
+        redirect_to root_path, notice: 'User profile could not be found.'
+      end 
+    end
+    
+    def admin_only
+      unless current_user.admin?
+        redirect_to root_path, :notice => 'You are not authorized to view that page.'
+      end
+    end
+    
+    def correct_user
+  		unless current_user == @user or current_user.admin?
+    		redirect_to root_path, :notice => 'You are not authorized to view that page.'
+		  end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

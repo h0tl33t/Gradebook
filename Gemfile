@@ -9,7 +9,7 @@ gem 'coffee-rails', '~> 4.0.0'
 gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jbuilder', '~> 1.2' #For building JSON APIs (https://github.com/rails/jbuilder)
-gem 'bcrypt-ruby', '~> 3.0.0' # Use ActiveModel has_secure_password
+gem 'bcrypt-ruby', '~> 3.0.0', require: 'bcrypt'
 
 group :development, :test do
   gem 'turn'

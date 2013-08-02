@@ -1,12 +1,15 @@
 <header class="navbar navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container">
-			<a class="brand" href="<%= root_path %>">Gradebook</a>
+			<%= link_to "Gradebook", root_path, class: "brand" %>
 			<div id="main-menu" class="nav-collapse collapse">
 				<ul id="main-menu-left", class="nav">
-					<% if signed_in? and current_user.admin? %>
+					<% if signed_in? %>
+						<li><%= link_to "Courses", courses_path %></li>
+						<% if current_user.admin? %>
 						<li><%= link_to "Semesters", semesters_path %></li>
 						<li><%= link_to "Users", users_path %></li>
+						<% end %>
 					<% end %>
 				</ul>
 				<ul id="main-menu-right" class="nav pull-right">

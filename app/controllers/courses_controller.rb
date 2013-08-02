@@ -4,12 +4,14 @@ class CoursesController < ApplicationController
   # GET /courses
   # GET /courses.json
   def index
-    @courses = Course.all
+    #current_semester = params[:semester] if params[:semester]
+    @courses = current_user.courses_for(current_semester)
   end
 
   # GET /courses/1
   # GET /courses/1.json
   def show
+    @course = @course = Course.includes(:enrolled_students, :enrollments).find(params[:id]) if current_user.teacher?
   end
 
   # GET /courses/new

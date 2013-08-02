@@ -1,4 +1,5 @@
 module SessionsHelper
+=begin
   def sign_in(user)
 		cookies.permanent[:remember_token] = user.remember_token
 		self.current_user = user
@@ -31,5 +32,10 @@ module SessionsHelper
 
 	def current_user
 		@current_user ||= User.find_by(remember_token: cookies[:remember_token])
+		#Querying database every single time...absolutely no idea why @current_user isn't being set.
+		#Module is included in Application Controller.
+		#@current_user is clearly being memoized ||= ...
+		#Threw debugging statements all over sessions#create, sign_in is triggering.
 	end
+=end
 end

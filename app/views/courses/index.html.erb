@@ -1,6 +1,6 @@
-<h1>Listing courses</h1>
+<h3>Courses for <%= "#{current_semester.name} (#{current_semester.courses.size})" %></h3>
 
-<table>
+<table class="table table-bordered table-striped table-hover">
   <thead>
     <tr>
       <th>Name</th>
@@ -20,9 +20,9 @@
         <td><%= course.long_title %></td>
         <td><%= course.description %></td>
         <td><%= course.credit_hours %></td>
-        <td><%= link_to 'Show', course %></td>
-        <td><%= link_to 'Edit', edit_course_path(course) %></td>
-        <td><%= link_to 'Destroy', course, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Show', course, class: "btn btn-small" %></td>
+        <td><%= link_to 'Edit', edit_course_path(course), class: "btn btn-small" %></td>
+        <td><%= link_to 'Destroy', course, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-small" %></td>
       </tr>
     <% end %>
   </tbody>
@@ -30,4 +30,4 @@
 
 <br>
 
-<%= link_to 'New Course', new_course_path %>
+<%= link_to 'New Course', new_course_path, class: "btn" %>

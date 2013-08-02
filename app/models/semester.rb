@@ -8,6 +8,7 @@ class Semester < ActiveRecord::Base
   
   scope :starts_during, lambda {|semester| where(start_date: (semester.start_date..semester.end_date))}
   scope :ends_during, lambda {|semester| where(end_date: (semester.start_date..semester.end_date))}
+  scope :current, lambda { where('start_date <= ? AND end_date >= ?', Date.today, Date.today).take}
   
   private
   def does_not_overlap

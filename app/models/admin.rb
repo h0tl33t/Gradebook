@@ -1,5 +1,5 @@
 class Admin < User
-  def method_missing(name, *args)
-    super
+  def admin?
+    true
   end
 end

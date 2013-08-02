@@ -12,17 +12,30 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :first_name %><br>
+    <%= f.label :first_name %>
     <%= f.text_field :first_name %>
   </div>
   <div class="field">
-    <%= f.label :last_name %><br>
+    <%= f.label :last_name %>
     <%= f.text_field :last_name %>
   </div>
   <div class="field">
-    <%= f.label :email %><br>
+    <%= f.label :email %>
     <%= f.text_field :email %>
   </div>
+	<div class="field">
+    <%= f.label :password %>
+    <%= f.password_field :password %>
+  </div>
+	<div class="field">
+    <%= f.label :password_confirmation, 'Password Confirmation' %>
+    <%= f.password_field :password_confirmation %>
+  </div>
+	<div class="dropdown">
+		<%= f.label :type %>
+		<%= select(:user, :type, User.types.map {|t| t.to_s}) %>
+	</div>
+	<br>
   <div class="actions">
     <%= f.submit %>
   </div>

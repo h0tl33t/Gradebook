@@ -1,6 +1,6 @@
 <h1>Listing enrollments</h1>
 
-<table>
+<table class="table table-bordered table-striped table-hover">
   <thead>
     <tr>
       <th>Student</th>
@@ -18,9 +18,9 @@
         <td><%= enrollment.student_id %></td>
         <td><%= enrollment.course_id %></td>
         <td><%= enrollment.grade %></td>
-        <td><%= link_to 'Show', enrollment %></td>
-        <td><%= link_to 'Edit', edit_enrollment_path(enrollment) %></td>
-        <td><%= link_to 'Destroy', enrollment, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Show', enrollment, class: "btn btn-small" %></td>
+        <td><%= link_to 'Edit', edit_enrollment_path(enrollment), class "btn btn-small" %></td>
+        <td><%= link_to 'Destroy', enrollment, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-small" %></td>
       </tr>
     <% end %>
   </tbody>
@@ -28,4 +28,4 @@
 
 <br>
 
-<%= link_to 'New Enrollment', new_enrollment_path %>
+<%= link_to 'New Enrollment', new_enrollment_path, class: "btn" %>
