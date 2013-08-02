@@ -4,25 +4,10 @@
 			<%= link_to "Gradebook", root_path, class: "brand" %>
 			<div id="main-menu" class="nav-collapse collapse">
 				<ul id="main-menu-left", class="nav">
-					<% if signed_in? %>
-						<li><%= link_to "Courses", courses_path %></li>
-						<% if current_user.admin? %>
-						<li><%= link_to "Semesters", semesters_path %></li>
-						<li><%= link_to "Users", users_path %></li>
-						<% end %>
-					<% end %>
+					<%= render 'layouts/navbar_links' if signed_in? %>
 				</ul>
 				<ul id="main-menu-right" class="nav pull-right">
-					<% if signed_in? %>
-						<li><%= link_to "My Profile", user_path(current_user) %></li>
-						<li><%= link_to "Sign Out", signout_path %></li>
-					<% else %>
-						<%= form_for :session, url: sessions_path do |f| %>
-							<%= f.email_field :email, placeholder: "Email", class: "input" %>
-							<%= f.password_field :password, placeholder: "Password", class: "input" %>
-							<%= f.submit "Sign In", class: "btn btn-small" %>
-						<% end %>
-					<% end %>
+					<%= render 'layouts/signin' %>
 				</ul>
 			</div>
 		</div>
