@@ -11,7 +11,13 @@ class CoursesController < ApplicationController
   # GET /courses/1
   # GET /courses/1.json
   def show
-    @course = @course = Course.includes(:enrolled_students, :enrollments).find(params[:id]) if current_user.teacher?
+    if current_user.teacher?
+      @course = Course.includes(:enrolled_students, :enrollments).find(params[:id]) #Pull courses with student info and enrollments to list students w/ grades.
+    elsif current_user.student?
+      @course = Course.includes(:teacher, :enrollments).find(params[:id]) #Pull courses with teacher and enrollments to display teacher info and grades.
+    else
+      @course = Course.includes(:teacher).find(params[:id]) #Pull courses with teacher to display teacher info.
+    end
   end
 
   # GET /courses/new

@@ -9,12 +9,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   
   def signed_in?
-    unless session[:user_id]
-      flash[:notice] = 'You must be logged in to view that page.'
-      false
-    else
-      true
-    end
+    session[:user_id]
   end
   
   private

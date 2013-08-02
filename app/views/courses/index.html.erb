@@ -1,4 +1,4 @@
-<h3>Courses for <%= "#{current_semester.name} (#{current_semester.courses.size})" %></h3>
+<h3>Courses for <%= "#{current_semester.name}" %><%= " (#{current_semester.courses.size})" if current_user.admin? %></h3>
 
 <table class="table table-bordered table-striped table-hover">
   <thead>
@@ -7,9 +7,17 @@
       <th>Long title</th>
       <th>Description</th>
       <th>Credit hours</th>
+			<% if current_user.admin? or current_user.teacher? %>
+      <th>Enrolled Students</th>
+      <th>Average Grade</th>
+			<% elsif current_user.student? %>
+			<th>Grade</th>
+			<th></th>
+			<% else %>
       <th></th>
-      <th></th>
-      <th></th>
+			<th></th>
+			<% end %>
+			<th></th>
     </tr>
   </thead>
 
@@ -20,9 +28,16 @@
         <td><%= course.long_title %></td>
         <td><%= course.description %></td>
         <td><%= course.credit_hours %></td>
+				<% if current_user.admin? or current_user.teacher? %>
+				<td><%= course.enrollment_count %></td>
+				<td><%= course.average_letter_grade %></td>
+				<% elsif current_user.student? %>
+				<td><%= course.student_grade %></td>
+				<td></td>
+				<% end %>
         <td><%= link_to 'Show', course, class: "btn btn-small" %></td>
-        <td><%= link_to 'Edit', edit_course_path(course), class: "btn btn-small" %></td>
-        <td><%= link_to 'Destroy', course, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-small" %></td>
+        <!--<td><%= link_to 'Edit', edit_course_path(course), class: "btn btn-small" %></td>
+        <td><%= link_to 'Destroy', course, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-small" %></td>-->
       </tr>
     <% end %>
   </tbody>

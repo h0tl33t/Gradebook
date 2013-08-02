@@ -19,7 +19,7 @@
         <td><%= enrollment.course_id %></td>
         <td><%= enrollment.grade %></td>
         <td><%= link_to 'Show', enrollment, class: "btn btn-small" %></td>
-        <td><%= link_to 'Edit', edit_enrollment_path(enrollment), class "btn btn-small" %></td>
+        <td><%= link_to 'Edit', edit_enrollment_path(enrollment), class: "btn btn-small" %></td>
         <td><%= link_to 'Destroy', enrollment, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-small" %></td>
       </tr>
     <% end %>
