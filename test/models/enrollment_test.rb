@@ -1,6 +1,14 @@
 require 'test_helper'
 
 class EnrollmentTest < ActiveSupport::TestCase
+  setup do
+    @enrollment = Enrollment.first
+  end
+  
+  teardown do
+    @enrollment = nil
+  end
+  
   test 'invalid without a student' do
     enrollment = FactoryGirl.build(:enrollment, student: nil)
     refute enrollment.valid?, 'Not validating presence of a student.'
@@ -39,5 +47,11 @@ class EnrollmentTest < ActiveSupport::TestCase
   test 'letter grade valid between 0.0 and 4.0' do
     enrollment = FactoryGirl.build(:enrollment, grade: '2.7')
     assert enrollment.valid?, 'Not accepting valid letter grades.'
+  end
+  
+  test 'scope with courses for a given semester' do
+    semester = @enrollment.course.semester
+    assert_equal Enrollment.includes(:course).where(courses: {semester_id: semester.id}), Enrollment.with_courses_for_semester(semester), 
+      'Not scoping courses for a given semester.'
   end
 end

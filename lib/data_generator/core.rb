@@ -8,26 +8,34 @@ module DataGenerator
     def user(options = {}) #Creates users and returns created users in a results array.
       options[:type] ||= Student #Default to Student.
       attr_hashes = DataGenerator::UserData.new(options).users
-      create_with(options[:type], attr_hashes, options[:action])
+      results = create_with(options[:type], attr_hashes, options[:action])
+      report(options[:type], results.size) if options[:report]
+      results.size > 1 ? results : results.first
     end
   
     def semester(options = {}) #Creates semesters and returns created semesters in a results array.
       attr_hashes = DataGenerator::SemesterData.new(options).semesters
-      create_with(Semester, attr_hashes, options[:action])
+      results = create_with(Semester, attr_hashes, options[:action])
+      report(Semester, results.size) if options[:report]
+      results.size > 1 ? results : results.first
     end
   
     def course(options = {}) #Creates courses and returns created courses in a results array.
       options[:semesters] ? options[:semesters] = grab_ids_from(options[:semesters]) : options[:semesters] = grab_ids_from(semester) #Feed ids.
       options[:teachers] ? options[:teachers] = grab_ids_from(options[:teachers]) : options[:teachers] = grab_ids_from(user(type: Teacher)) #Feed ids.
       attr_hashes = DataGenerator::CourseData.new(options).courses
-      create_with(Course, attr_hashes, options[:action])
+      results = create_with(Course, attr_hashes, options[:action])
+      report(Course, results.size) if options[:report]
+      results.size > 1 ? results : results.first
     end
   
     def enrollment(options = {})
       options[:students] ? options[:students] = grab_ids_from(options[:students]) : options[:students] = grab_ids_from(user(type: Student)) #Feed ids.
       options[:courses] ? options[:courses] = grab_ids_from(options[:courses]) : options[:courses] = grab_ids_from(course) #Feed ids.
       attr_hashes = DataGenerator::EnrollmentData.new(options).enrollments
-      create_with(Enrollment, attr_hashes, options[:action])
+      results = create_with(Enrollment, attr_hashes, options[:action])
+      report(Enrollment, results.size) if options[:report]
+      results.size > 1 ? results : results.first
     end
   
     def all
@@ -45,6 +53,10 @@ module DataGenerator
         objects << klass.send(action, attrs)
         objects
       end
+    end
+    
+    def report(klass, number)
+      puts "#{self.class} generated #{number} #{klass} objects!"
     end
     
     def grab_ids_from(obj)

@@ -1,6 +1,16 @@
 require 'test_helper' 
 
 class TeacherTest < ActiveSupport::TestCase
+  def setup
+    @teacher = Student.first
+    @semester = Semester.first
+  end
+  
+  def teardown
+    @teacher = nil
+    @semester = nil
+  end
+  
   test 'User type populates with Teacher when saved' do
     teacher = FactoryGirl.create(:teacher)
     assert_equal 'Teacher', teacher.type
@@ -20,9 +30,8 @@ class TeacherTest < ActiveSupport::TestCase
   
   test 'courses_for as a Teacher returns all courses taught for a given semester' do
     teacher = FactoryGirl.create(:teacher_with_courses)
-    semester = FactoryGirl.create(:semester)
-    teacher.courses.each {|course| course.semester = semester}
-    assert_equal Course.where(semester: semester).where(teacher: teacher).to_a, teacher.courses_for(semester),
+    teacher.courses.each {|course| course.semester = @semester}
+    assert_equal Course.where(semester: @semester).where(teacher: teacher).to_a, teacher.courses_for(@semester),
       'Not pulling all courses taught for a given semester.'
   end
   

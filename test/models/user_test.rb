@@ -76,7 +76,7 @@ class UserTest < ActiveSupport::TestCase
   
   test 'calling courses for a given semester as a User returns all courses for that semester' do
     user = FactoryGirl.create(:user)
-    semester = FactoryGirl.create(:semester)
+    semester = Semester.first
     assert_equal Course.where(semester: semester), user.courses_for(semester), 'Not correctly pulling all courses for a given semester.'
   end
 end

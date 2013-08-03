@@ -12,12 +12,16 @@ class Student < User
     courses_with_grades
   end
   
+  def enrollments_for(semester)
+    enrollments.with_courses_for_semester(semester)
+  end
+  
   def gpa
     @gpa || 'GPA unavailable.'
   end
     
   def calculate_gpa_for(courses_with_grades) #Pulls grade + credit hours, then calculates GPA
-    values = courses_with_grades.inject({:credit_points => 0, :credit_hours => 0}) do |values, course|
+    values = courses_with_grades.inject({credit_points: 0, credit_hours: 0}) do |values, course|
       values[:credit_points] += course.student_grade * course.credit_hours #course.grade should be generated in the declaration of @courses in course#index.
       values[:credit_hours] += course.credit_hours
       values

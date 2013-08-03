@@ -1,6 +1,16 @@
 require 'test_helper'
 
 class StudentTest < ActiveSupport::TestCase
+  def setup
+    @student = Student.first
+    @semester = Semester.first
+  end
+  
+  def teardown
+    @student = nil
+    @semester = nil
+  end
+  
   test 'User type populates with Student when saved' do
     student = FactoryGirl.create(:student)
     assert_equal 'Student', student.type
@@ -25,17 +35,21 @@ class StudentTest < ActiveSupport::TestCase
 
   test 'courses_for as a Student returns all enrolled_courses for a given semester' do
     student = FactoryGirl.create(:student_with_enrollments)
-    semester = FactoryGirl.create(:semester)
-    courses = student.courses_for(semester)
-    assert_equal Course.for_semester(semester).joins(:enrollments).where(enrollments: {student: student}).to_a, student.courses_for(semester),
+    courses = student.courses_for(@semester)
+    assert_equal Course.for_semester(@semester).joins(:enrollments).where(enrollments: {student: student}).to_a, student.courses_for(@semester),
       'Not pulling all enrolled courses for a given semester.'
   end
   
   test 'courses returned from courses_for allow the student to view grade by course.student_grade' do
     student = FactoryGirl.create(:student_with_enrollments)
-    semester = FactoryGirl.create(:semester)
-    courses = student.courses_for(semester)
+    #semester = FactoryGirl.create(:semester)
+    courses = student.courses_for(@semester)
     assert_respond_to(courses.first, :student_grade, 'Student grade is not accessible from courses returned from courses_for.')
+  end
+  
+  test 'can retrieve enrollments with course data for a given semester' do
+    assert_equal Enrollment.where(student: @student).includes(:course).where(courses: {semester_id: @semester.id}).to_a, @student.enrollments_for(@semester),
+      'Not correctly pulling enrollments with course data for a given semester.'
   end
   
   test 'student is not an admin' do
@@ -60,13 +74,12 @@ class StudentTest < ActiveSupport::TestCase
 
   test 'can retrieve gpa from given courses' do
     student = FactoryGirl.create(:student)
-    semester = FactoryGirl.create(:semester, start_date: 30.days.ago, end_date: 10.days.ago)
 
-    course1 = FactoryGirl.create(:course, semester: semester, credit_hours: 3)
-    course2 = FactoryGirl.create(:course, semester: semester, credit_hours: 4) 
-    course3 = FactoryGirl.create(:course, semester: semester, credit_hours: 3)
-    course4 = FactoryGirl.create(:course, semester: semester, credit_hours: 2.5) 
-    course5 = FactoryGirl.create(:course, semester: semester, credit_hours: 4) #16.5 total credit hours for semester
+    course1 = FactoryGirl.create(:course, semester: @semester, credit_hours: 3)
+    course2 = FactoryGirl.create(:course, semester: @semester, credit_hours: 4) 
+    course3 = FactoryGirl.create(:course, semester: @semester, credit_hours: 3)
+    course4 = FactoryGirl.create(:course, semester: @semester, credit_hours: 2.5) 
+    course5 = FactoryGirl.create(:course, semester: @semester, credit_hours: 4) #16.5 total credit hours for semester
 
     enrollment1 = FactoryGirl.create(:enrollment, course: course1, student: student, grade: 2.3) #6.9 credit points
     enrollment2 = FactoryGirl.create(:enrollment, course: course2, student: student, grade: 4.0) #16 credit points
@@ -74,7 +87,7 @@ class StudentTest < ActiveSupport::TestCase
     enrollment4 = FactoryGirl.create(:enrollment, course: course4, student: student, grade: 3.0) #7.5 credit points
     enrollment5 = FactoryGirl.create(:enrollment, course: course5, student: student, grade: 3.7) #14.8 credit points
     
-    courses = Course.where(semester: semester).joins(:enrollments).where(enrollments: {student: student}).select('courses.*, enrollments.grade as student_grade')
+    courses = Course.where(semester: @semester).joins(:enrollments).where(enrollments: {student: student}).select('courses.*, enrollments.grade as student_grade')
     
     #GPA should be credit points (50.3) divided by total credit hours (16.5) with the result rounded to two decimal places => 3.05
     assert_equal 3.05, student.calculate_gpa_for(courses), 'Not correctly calculating GPA from given courses.'

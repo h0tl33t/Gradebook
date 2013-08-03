@@ -10,6 +10,9 @@ class Enrollment < ActiveRecord::Base
   
   after_save :trigger_avg_grade_calc_on_course
   
+  scope :with_courses_for_semester, lambda {|semester| includes(:course).where(courses: {semester_id: semester.id})}
+  #Enrollment.where(student: @student).includes(:course).where(courses: {semester: @semester})
+  
   def letter_grade
     GradeHelper.letter_grade_for(grade)
   end
