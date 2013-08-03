@@ -9,14 +9,12 @@ module DataGenerator
       options[:type] ||= Student #Default to Student.
       attr_hashes = DataGenerator::UserData.new(options).users
       results = create_with(options[:type], attr_hashes, options[:action])
-      report(options[:type], results.size) if options[:report]
       results.size > 1 ? results : results.first
     end
   
     def semester(options = {}) #Creates semesters and returns created semesters in a results array.
       attr_hashes = DataGenerator::SemesterData.new(options).semesters
       results = create_with(Semester, attr_hashes, options[:action])
-      report(Semester, results.size) if options[:report]
       results.size > 1 ? results : results.first
     end
   
@@ -25,7 +23,6 @@ module DataGenerator
       options[:teachers] ? options[:teachers] = grab_ids_from(options[:teachers]) : options[:teachers] = grab_ids_from(user(type: Teacher)) #Feed ids.
       attr_hashes = DataGenerator::CourseData.new(options).courses
       results = create_with(Course, attr_hashes, options[:action])
-      report(Course, results.size) if options[:report]
       results.size > 1 ? results : results.first
     end
   
@@ -34,7 +31,6 @@ module DataGenerator
       options[:courses] ? options[:courses] = grab_ids_from(options[:courses]) : options[:courses] = grab_ids_from(course) #Feed ids.
       attr_hashes = DataGenerator::EnrollmentData.new(options).enrollments
       results = create_with(Enrollment, attr_hashes, options[:action])
-      report(Enrollment, results.size) if options[:report]
       results.size > 1 ? results : results.first
     end
   
@@ -42,8 +38,8 @@ module DataGenerator
       teachers = user(type: Teacher, quantity: 50)
       students = user(type: Student, quantity: 200)
       semesters = semester(quantity: 8)
-      courses = course(quantity: 200, semesters: semesters.map(&:id), teachers: teachers.map(&:id))
-      enrollment(students: students.map(&:id), courses: courses.map(&:id), courses_per_student: 40)
+      courses = course(quantity: 200, semesters: semesters, teachers: teachers)
+      enrollment(students: students, courses: courses, courses_per_student: 40)
     end
   
     private
@@ -54,11 +50,7 @@ module DataGenerator
         objects
       end
     end
-    
-    def report(klass, number)
-      puts "#{self.class} generated #{number} #{klass} objects!"
-    end
-    
+
     def grab_ids_from(obj)
       if is_id?(obj)
         [obj]
