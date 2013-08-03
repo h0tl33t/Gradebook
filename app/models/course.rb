@@ -9,7 +9,7 @@ class Course < ActiveRecord::Base
   validates :description, presence: true
   validate :acceptable_value_for_credit_hours
   
-  scope :for_semester, lambda {|semester| where(semester: semester)}
+  scope :for_semester, lambda {|semester| where(semester_id: semester)}
   scope :with_grades_for, lambda {|student| joins(:enrollments).where(enrollments: {student: student}).select('courses.*, enrollments.grade as student_grade')}
   
   def calculate_average_grade #Must be called via callback in EnrollmentsController, triggering from create, update, and destroy actions.

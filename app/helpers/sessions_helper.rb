@@ -1,12 +1,11 @@
 module SessionsHelper
-=begin
   def sign_in(user)
-		cookies.permanent[:remember_token] = user.remember_token
+		session[:user_id] = user.id
 		self.current_user = user
 	end
 
 	def sign_out
-		cookies.delete(:remember_token)
+	  session[:user_id] = nil
 		self.current_user = nil
 	end
 
@@ -19,7 +18,7 @@ module SessionsHelper
 	end
 
 	def signed_in?
-		current_user
+		!current_user.nil?
 	end
 
 	def current_user?(user)
@@ -31,11 +30,10 @@ module SessionsHelper
 	end
 
 	def current_user
-		@current_user ||= User.find_by(remember_token: cookies[:remember_token])
+		@current_user ||= User.find(session[:user_id]) if session[:user_id]
 		#Querying database every single time...absolutely no idea why @current_user isn't being set.
 		#Module is included in Application Controller.
 		#@current_user is clearly being memoized ||= ...
 		#Threw debugging statements all over sessions#create, sign_in is triggering.
 	end
-=end
 end

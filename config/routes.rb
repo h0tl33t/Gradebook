@@ -1,11 +1,10 @@
 Gradebook::Application.routes.draw do
   root 'home#index'
   
-  resources :enrollments
-
-  resources :courses
-
-  resources :semesters
+  resources :semesters do
+    resources :courses
+    resources :enrollments
+  end
 
   resources :users
   

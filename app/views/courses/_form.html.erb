@@ -11,6 +11,9 @@
     </div>
   <% end %>
 
+	<div class="hidden">
+		<%= f.hidden_field :teacher_id, value: current_user.id %>
+	</div>
   <div class="field">
     <%= f.label :name %><br>
     <%= f.text_field :name %>
@@ -27,6 +30,9 @@
     <%= f.label :credit_hours %><br>
     <%= f.text_field :credit_hours %>
   </div>
+	<div class="dropdown">
+		<%= f.collection_select(:semester_id, @semesters, :id, :name) %>
+	</div>
   <div class="actions">
     <%= f.submit %>
   </div>

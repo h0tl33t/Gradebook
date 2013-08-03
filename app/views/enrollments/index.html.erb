@@ -1,31 +1,41 @@
-<h1>Listing enrollments</h1>
+<h4>Enrolled Courses for <%= current_semester.name %></h4>
+<p>
+	<strong>Credit Hours for Semester:</strong>
+	<%= @total_credit_hours %>
+</p>
 
 <table class="table table-bordered table-striped table-hover">
   <thead>
     <tr>
-      <th>Student</th>
-      <th>Course</th>
+      <th>Name</th>
+      <th>Long Title</th>
+      <th>Description</th>
+      <th>Credit Hours</th>
       <th>Grade</th>
-      <th></th>
-      <th></th>
-      <th></th>
+			<th></th>
     </tr>
   </thead>
 
   <tbody>
     <% @enrollments.each do |enrollment| %>
       <tr>
-        <td><%= enrollment.student_id %></td>
-        <td><%= enrollment.course_id %></td>
-        <td><%= enrollment.grade %></td>
-        <td><%= link_to 'Show', enrollment, class: "btn btn-small" %></td>
-        <td><%= link_to 'Edit', edit_enrollment_path(enrollment), class: "btn btn-small" %></td>
-        <td><%= link_to 'Destroy', enrollment, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-small" %></td>
+        <td><%= enrollment.course.name %></td>
+        <td><%= enrollment.course.long_title %></td>
+        <td><%= enrollment.course.description %></td>
+        <td><%= enrollment.course.credit_hours %></td>
+				<td><%= enrollment.letter_grade %></td>
+        <td><%= link_to 'Unenroll', semester_enrollment_path(current_semester, enrollment), method: :delete, 
+					data: {confirm: 'Are you sure you want to unenroll?'}, class: "btn btn-small" %>
+				</td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<br>
+<%= form_for :enrollments, action: 'index', method: :get, class: "dropdown" do |f| %>
+	<h4>Select a Different Semester to View Enrollments For: <%= f.collection_select :semester_id, all_semesters, :id, :name %>
+		<%= f.submit 'Go', class: "btn"	%></h4>
+<% end %>
 
-<%= link_to 'New Enrollment', new_enrollment_path, class: "btn" %>
+<br>
+<%= link_to 'New Enrollment', new_semester_enrollment_path, class: "btn" %>

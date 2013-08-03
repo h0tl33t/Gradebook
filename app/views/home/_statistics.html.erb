@@ -1,0 +1,12 @@
+<div class="well">
+	<h4>Come Check Us Out!</h4>
+	<p>Schooling kids since <%= @year %>.</p>
+	<p>Currently in <%= current_semester.name %> semester.</p>
+	<p><%= @active_students %> students are currently enrolled in classes at Ruby University.</p>
+	<p>Offering awesome courses like:</p>
+	<ul>
+		<% @awesome_courses.each do |course| %>
+		<li><%= "#{course.name} - #{course.long_title}"%></li>
+		<% end %>
+	</ul>
+</div>

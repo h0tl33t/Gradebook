@@ -1,12 +1,17 @@
-<h3>Courses for <%= "#{current_semester.name}" %><%= " (#{current_semester.courses.size})" if current_user.admin? %></h3>
+<h4>Courses for <%= "#{current_semester.name}" %><%= " (#{current_semester.courses.size} Total)" if current_user.admin? %></h4>
+
+<%= form_for :semester, controller: :courses, action: 'index', method: :get, class: "dropdown" do |f| %>
+	<h5>Select a Different Semester to View Courses For: <%= f.collection_select :id, all_semesters, :id, :name %>
+		<%= f.submit 'Go', class: "btn"	%></h5>
+<% end %>
 
 <table class="table table-bordered table-striped table-hover">
   <thead>
     <tr>
       <th>Name</th>
-      <th>Long title</th>
+      <th>Long Title</th>
       <th>Description</th>
-      <th>Credit hours</th>
+      <th>Credit Hours</th>
 			<% if current_user.admin? or current_user.teacher? %>
       <th>Enrolled Students</th>
       <th>Average Grade</th>
@@ -15,7 +20,6 @@
 			<th></th>
 			<% else %>
       <th></th>
-			<th></th>
 			<% end %>
 			<th></th>
     </tr>
@@ -33,11 +37,8 @@
 				<td><%= course.average_letter_grade %></td>
 				<% elsif current_user.student? %>
 				<td><%= course.student_grade %></td>
-				<td></td>
 				<% end %>
-        <td><%= link_to 'Show', course, class: "btn btn-small" %></td>
-        <!--<td><%= link_to 'Edit', edit_course_path(course), class: "btn btn-small" %></td>
-        <td><%= link_to 'Destroy', course, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-small" %></td>-->
+        <td><%= link_to 'Show', semester_course_path(current_semester, course), class: "btn btn-small" %></td>
       </tr>
     <% end %>
   </tbody>
@@ -45,4 +46,4 @@
 
 <br>
 
-<%= link_to 'New Course', new_course_path, class: "btn" %>
+<%= link_to 'New Course', new_semester_course_path, class: "btn" %>

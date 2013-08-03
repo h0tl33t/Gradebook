@@ -15,6 +15,7 @@ group :development, :test do
   gem 'turn'
   gem 'factory_girl_rails', '~> 4.0'
   gem 'capybara'
+  gem 'pry-rails'
 end
 
 group :doc do

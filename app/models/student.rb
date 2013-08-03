@@ -28,4 +28,8 @@ class Student < User
     end
     (values[:credit_points]/values[:credit_hours]).round(2)
   end
+  
+  def student?
+    true
+  end
 end

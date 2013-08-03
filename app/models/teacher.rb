@@ -4,4 +4,8 @@ class Teacher < User
   def courses_for(semester)
     courses.for_semester(semester)
   end
+  
+  def teacher?
+    true
+  end
 end

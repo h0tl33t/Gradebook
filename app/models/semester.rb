@@ -5,15 +5,22 @@ class Semester < ActiveRecord::Base
   validates :start_date, presence: true
   validates :end_date, presence: true
   validate :does_not_overlap
+  validate :ends_after_it_starts
   
-  scope :starts_during, lambda {|semester| where(start_date: (semester.start_date..semester.end_date))}
-  scope :ends_during, lambda {|semester| where(end_date: (semester.start_date..semester.end_date))}
+  scope :starts_during, lambda {|semester| where(start_date: (semester.start_date..semester.end_date)).where.not(id: semester.id)}
+  scope :ends_during, lambda {|semester| where(end_date: (semester.start_date..semester.end_date)).where.not(id: semester.id)}
   scope :current, lambda { where('start_date <= ? AND end_date >= ?', Date.today, Date.today).take}
   
   private
   def does_not_overlap
     unless Semester.starts_during(self).empty? and Semester.ends_during(self).empty?
       errors.add(:base, 'A semester cannot overlap an existing semester.')
+    end
+  end
+  
+  def ends_after_it_starts
+    unless start_date <= end_date
+      errors.add(:base, 'A semester cannot end before it starts.')
     end
   end
 end
