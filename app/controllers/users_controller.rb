@@ -19,21 +19,28 @@ class UsersController < ApplicationController
   # GET /users/new
   def new
     @user = User.new
+    @enable_type_select = true
+    #@types = User.types.map(&:to_s)
   end
 
   # GET /users/1/edit
   def edit
+    @enable_type_select = false #Should not be able to change type since the User has already been created with a User subclass.
   end
 
   # POST /users
   # POST /users.json
   def create
-    @user = User.new(user_params)
-
+    if params[:user] && params[:user][:type]
+      @user = params[:user][:type].constantize.new(user_params)
+    else
+      @user = User.new(user_params)
+    end
+    
     respond_to do |format|
-      if @user.save
+      if @user && @user.save
         sign_in @user
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
+        format.html { redirect_to user_path(@user), notice: 'User was successfully created.' }
         format.json { render action: 'show', status: :created, location: @user }
       else
         format.html { render action: 'new' }
@@ -47,7 +54,7 @@ class UsersController < ApplicationController
   def update
     respond_to do |format|
       if @user.update(user_params)
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
+        format.html { redirect_to user_path(@user), notice: 'User was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
@@ -60,8 +67,9 @@ class UsersController < ApplicationController
   # DELETE /users/1.json
   def destroy
     @user.destroy
+    sign_out
     respond_to do |format|
-      format.html { redirect_to users_url }
+      format.html { redirect_to root_path }
       format.json { head :no_content }
     end
   end
@@ -90,6 +98,8 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation)
+      params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :type)
+      #Allowing :type for sample app to simplify testing.  
+      #Would want to remove :type and handle User type assignment at the admin level only.
     end
 end

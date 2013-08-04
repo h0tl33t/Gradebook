@@ -13,20 +13,24 @@ class Student < User
   end
   
   def enrollments_for(semester)
-    enrollments.with_courses_for_semester(semester)
+    enrollment_list = enrollments.with_courses_for_semester(semester)
+    self.gpa = calculate_gpa_with(enrollment_list)
+    #GPA only being seen at the index view, where enrollments_for generates the data.  Reduce DB queries and calculate and store the GPA in paraellel.
+    enrollment_list
   end
   
   def gpa
-    @gpa || 'GPA unavailable.'
+    @gpa #|| 'GPA unavailable.'
   end
-    
-  def calculate_gpa_for(courses_with_grades) #Pulls grade + credit hours, then calculates GPA
-    values = courses_with_grades.inject({credit_points: 0, credit_hours: 0}) do |values, course|
-      values[:credit_points] += course.student_grade * course.credit_hours #course.grade should be generated in the declaration of @courses in course#index.
-      values[:credit_hours] += course.credit_hours
+  
+  def calculate_gpa_with(enrollment_list)
+    values = enrollment_list.inject({credit_points: 0, credit_hours: 0}) do |values, enrollment|
+      values[:credit_points] += enrollment.grade * enrollment.course.credit_hours
+      values[:credit_hours] += enrollment.course.credit_hours
       values
     end
-    (values[:credit_points]/values[:credit_hours]).round(2)
+    gpa = (values[:credit_points]/values[:credit_hours]).round(2)
+    #binding.pry
   end
   
   def student?

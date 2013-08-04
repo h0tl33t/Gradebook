@@ -1,6 +1,6 @@
 <h1>Editing course</h1>
 
-<%= render 'form' %>
+<%= render 'form', enable_semester_select: false %>
 
-<%= link_to 'Show', @course %> |
-<%= link_to 'Back', courses_path %>
+<%= link_to 'Show', semester_course_path(current_semester, @course) %> |
+<%= link_to 'Back', semester_courses_path(current_semester) %>

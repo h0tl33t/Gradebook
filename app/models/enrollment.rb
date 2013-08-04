@@ -2,7 +2,6 @@ class Enrollment < ActiveRecord::Base
   belongs_to :student
   belongs_to :course, counter_cache: true
   
-  validates :grade, presence: true
   validates :student, presence: true
   validates :course, presence: true
   validate :enrollment_is_unique, on: :create
@@ -11,7 +10,7 @@ class Enrollment < ActiveRecord::Base
   before_save :convert_letter_grades
   after_save :trigger_avg_grade_calc_on_course
   
-  scope :with_courses_for_semester, lambda {|semester| includes(:course).where(courses: {semester_id: semester.id})}
+  scope :with_courses_for_semester, lambda {|semester| includes(course: :teacher).where(courses: {semester_id: semester.id})}
   
   def letter_grade
     GradeHelper.letter_grade_for(grade)

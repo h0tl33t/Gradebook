@@ -1,14 +1,17 @@
 class EnrollmentsController < ApplicationController
   include SessionsHelper
+  include SemestersHelper
   
   before_action :set_enrollment, only: [:show, :edit, :update, :destroy]
   before_action :set_semester, only: [:index]
-  before_action :allow_student, only: [:index]
+  before_action :disallow_admin
+  before_action :disallow_student, except: [:index, :create, :destroy]
+  before_action :disallow_teacher, except: [:update]
   
   # GET /enrollments
   # GET /enrollments.json
   def index
-    @enrollments = current_user.enrollments.with_courses_for_semester(current_semester)
+    @enrollments = current_user.enrollments_for(current_semester)
     @total_credit_hours = @enrollments.inject(0) {|total, enrollment| total += enrollment.course.credit_hours}
   end
 
@@ -30,13 +33,16 @@ class EnrollmentsController < ApplicationController
   # POST /enrollments.json
   def create
     format_letter_grades
+    params[:enrollment][:grade] = GradeHelper.random_grade
     @enrollment = Enrollment.new(enrollment_params)
     respond_to do |format|
       if @enrollment.save
-        format.html { redirect_to course_path(@enrollment.course), notice: 'Enrollment was successfully created.'}
+        format.html { redirect_to semester_enrollments_path(params[:semester_id]), notice: "Successfully enrolled in #{@enrollment.course.name}."}
         format.json { render action: 'show', status: :created, location: @enrollment }
       else
-        format.html { render action: 'new' }
+        format.html { 
+            flash.now[:error] = 'Enrollment was unsuccessful.'
+            redirect_to semester_courses_path(current_semester) }
         format.json { render json: @enrollment.errors, status: :unprocessable_entity }
       end
     end
@@ -46,10 +52,9 @@ class EnrollmentsController < ApplicationController
   # PATCH/PUT /enrollments/1.json
   def update
     format_letter_grades
-    #params[:enrollment][:grade] = GradeHelper.numeric_grade_for(params[:enrollment][:grade])
     respond_to do |format|
       if @enrollment.update(enrollment_params)
-        format.html { redirect_to course_path(@enrollment.course), notice: 'Enrollment was successfully updated.'}
+        format.html { redirect_to semester_course_path(current_semester, @enrollment.course), notice: 'Enrollment was successfully updated.'}
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
@@ -63,7 +68,7 @@ class EnrollmentsController < ApplicationController
   def destroy
     @enrollment.destroy
     respond_to do |format|
-      format.html { redirect_to enrollments_url }
+      format.html { redirect_to semester_enrollments_path}
       format.json { head :no_content }
     end
   end
@@ -83,18 +88,15 @@ class EnrollmentsController < ApplicationController
       params[:enrollment][:grade] = GradeHelper.numeric_grade_for(params[:enrollment][:grade])
     end
     
-    def allow_student
-      redirect_to courses_path unless current_user.student?
+    def disallow_student
+      redirect_to semester_courses_path(current_semester) if current_user.student?
     end
     
-    def set_semester
-      if params[:enrollment] && params[:enrollment][:semester_id]
-        self.current_semester = Semester.find(params[:enrollment][:semester_id])
-        params[:semester_id] = current_semester
-      elsif params[:semester_id]
-        self.current_semester = Semester.find(params[:semester_id])
-      else
-        self.current_semester = Semester.current
-      end
+    def disallow_teacher
+      redirect_to semester_courses_path(current_semester) if current_user.teacher?
+    end
+    
+    def disallow_admin
+      redirect_to semester_courses_path(current_semester) if current_user.admin?
     end
 end

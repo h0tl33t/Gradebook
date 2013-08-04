@@ -1,49 +1,75 @@
-<h4>Courses for <%= "#{current_semester.name}" %><%= " (#{current_semester.courses.size} Total)" if current_user.admin? %></h4>
-
-<%= form_for :semester, controller: :courses, action: 'index', method: :get, class: "dropdown" do |f| %>
-	<h5>Select a Different Semester to View Courses For: <%= f.collection_select :id, all_semesters, :id, :name %>
-		<%= f.submit 'Go', class: "btn"	%></h5>
+<% if current_user.admin? %>
+<h4>Courses for <%= "#{current_semester.name} (#{current_semester.courses.size} Total)"%></h4>
+<% elsif current_user.teacher? %>
+<h4>Courses Taught for <%= "#{current_semester.name}" %></h4>
+<% elsif current_user.student? %>
+<h4>Courses Available for Enrollment in <%= "#{current_semester.name} Semester" %></h4>
 <% end %>
 
-<table class="table table-bordered table-striped table-hover">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Long Title</th>
-      <th>Description</th>
-      <th>Credit Hours</th>
-			<% if current_user.admin? or current_user.teacher? %>
-      <th>Enrolled Students</th>
-      <th>Average Grade</th>
-			<% elsif current_user.student? %>
-			<th>Grade</th>
-			<th></th>
-			<% else %>
-      <th></th>
-			<% end %>
-			<th></th>
-    </tr>
-  </thead>
+<%= render 'semesters/select', current_controller: 'courses' %>
 
-  <tbody>
-    <% @courses.each do |course| %>
-      <tr>
-        <td><%= course.name %></td>
-        <td><%= course.long_title %></td>
-        <td><%= course.description %></td>
-        <td><%= course.credit_hours %></td>
-				<% if current_user.admin? or current_user.teacher? %>
-				<td><%= course.enrollment_count %></td>
-				<td><%= course.average_letter_grade %></td>
+<% if @courses.empty? and current_user.student? %>
+<%= flash.now[:info] = 'Enrollment is closed for past semesters.' %>
+<% else %>
+	<table class="table table-bordered table-striped table-hover">
+	  <thead>
+	    <tr>
+	      <th>Name</th>
+	      <th>Long Title</th>
+	      <th>Description</th>
+	      <th>Credit Hours</th>
+
+				<% if current_user.admin? %>
+	      <th>Enrolled Students</th>
+	      <th>Average Grade</th>
+				<th></th>
+			
+				<% elsif current_user.teacher? %>
+				<th>Enrolled Students</th>
+	      <th>Average Grade</th>
+				<th></th>
+				<th></th>
+			
 				<% elsif current_user.student? %>
-				<td><%= course.student_grade %></td>
+				<th></th>
+				<th></th>
 				<% end %>
-        <td><%= link_to 'Show', semester_course_path(current_semester, course), class: "btn btn-small" %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+	    </tr>
+	  </thead>
 
+	  <tbody>
+	    <% @courses.each do |course| %>
+	      <% if current_user.student? and course.enrollable_for?(current_user) %>
+				<tr>
+	        <td><%= course.name %></td>
+	        <td><%= course.long_title %></td>
+	        <td><%= course.description %></td>
+	        <td><%= course.credit_hours %></td>
+
+					<% if current_user.admin? %>
+					<td><%= course.enrollment_count %></td>
+					<td><%= course.average_letter_grade %></td>
+				
+					<% elsif current_user.teacher? %>
+					<td><%= course.enrollment_count %></td>
+					<td><%= course.average_letter_grade %></td>
+				
+					<% elsif current_user.student? %>
+					<td><%= link_to 'Enroll', semester_enrollments_path(semester_id: current_semester.id, enrollment: {course_id: course.id, student_id: current_user.id}),
+						method: :create, class: "btn btn-small" %></td>
+					<% end %>
+	        <td><%= link_to 'Show', semester_course_path(current_semester, course), class: "btn btn-small" %></td>
+				
+					<% if current_user.teacher? %>
+					<td><%= link_to 'Delete', semester_course_path(current_semester, course), method: :delete,
+						data: {confirm: 'Are you sure you want to delete this course and all its associated enrollments?'}, class: "btn btn-small" %></td>
+					<% end %>
+	      </tr>
+				<% end %>
+	    <% end %>
+	  </tbody>
+	</table>
+<% end %>
 <br>
 
-<%= link_to 'New Course', new_semester_course_path, class: "btn" %>
+<%= link_to 'Create a New Course', new_semester_course_path, class: "btn" if current_user.teacher? %>

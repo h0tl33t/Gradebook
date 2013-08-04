@@ -3,12 +3,17 @@
 	<strong>Credit Hours for Semester:</strong>
 	<%= @total_credit_hours %>
 </p>
+<p>
+	<strong>GPA:</strong>
+	<%= current_user.gpa %>
+</p>
 
 <table class="table table-bordered table-striped table-hover">
   <thead>
     <tr>
       <th>Name</th>
       <th>Long Title</th>
+			<th>Teacher</th>
       <th>Description</th>
       <th>Credit Hours</th>
       <th>Grade</th>
@@ -21,6 +26,7 @@
       <tr>
         <td><%= enrollment.course.name %></td>
         <td><%= enrollment.course.long_title %></td>
+				<td><%= enrollment.course.teacher.full_name %></td>
         <td><%= enrollment.course.description %></td>
         <td><%= enrollment.course.credit_hours %></td>
 				<td><%= enrollment.letter_grade %></td>
@@ -32,10 +38,4 @@
   </tbody>
 </table>
 
-<%= form_for :enrollments, action: 'index', method: :get, class: "dropdown" do |f| %>
-	<h4>Select a Different Semester to View Enrollments For: <%= f.collection_select :semester_id, all_semesters, :id, :name %>
-		<%= f.submit 'Go', class: "btn"	%></h4>
-<% end %>
-
-<br>
-<%= link_to 'New Enrollment', new_semester_enrollment_path, class: "btn" %>
+<%= render 'semesters/select', current_controller: 'enrollments' %>

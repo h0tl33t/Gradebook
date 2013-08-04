@@ -45,6 +45,11 @@ class SemesterTest < ActiveSupport::TestCase
     refute Course.exists?(course), 'Not destroying associated courses when semester is destroyed.'
   end
   
+  test 'current scope returns semester that overlaps Date.today' do
+    current_semester = Semester.current
+    assert (current_semester.start_date..current_semester.end_date).cover?(Date.today), 'Current scope not pulling semester covering Date.today.'
+  end
+  
   test 'invalid if the end date is before the start date' do
     semester = FactoryGirl.build(:semester, start_date: Date.today, end_date: 10.days.ago)
     refute semester.valid?, 'Allowing semesters to end before they start.'

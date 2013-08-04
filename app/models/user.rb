@@ -1,10 +1,10 @@
 class User < ActiveRecord::Base
-  validates :first_name, presence: true, length: {maximum: 25}
-  validates :last_name, presence: true, length: {maximum: 25}
+  validates :first_name, presence: true, length: {maximum: 25}, on: :create
+  validates :last_name, presence: true, length: {maximum: 25}, on: :create
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  validates :email, presence: true, format: {with: VALID_EMAIL_REGEX}, uniqueness: {case_sensitive: false}
+  validates :email, presence: true, format: {with: VALID_EMAIL_REGEX}, uniqueness: {case_sensitive: false}, on: :create
   validates :password, presence: true, confirmation: true, on: :create
-  validates :password_confirmation, presence: true
+  validates :password_confirmation, presence: true, on: :create
   
   has_secure_password
   
@@ -33,15 +33,13 @@ class User < ActiveRecord::Base
   def student?
     false
   end
-  /
-  def method_missing(name, *args)
-    if name.to_s.last == '?' #Catch unknown boolean methods.
-      class_name = name.to_s.delete('?').capitalize.constantize #Classify the method name.
-      #Check to see if the Classify'd method name is a subclass of User (Admin, Teacher, Student).  If so, check if caller.class == class_name.  Else, super.
-      User.types.include?(class_name) ? self.class == class_name : super
-      #Enables us to dynamically check if a current user is a certain User type: current_user.admin?, current_user.teacher?, current_user.student?
-    else
-      super
+  
+  def self.inherited(child)
+    child.instance_eval do
+      def model_name #Necessary to enable Rails to guess routes for an STI-based object.
+        User.model_name
+      end
     end
-  end/
+    super
+  end
 end

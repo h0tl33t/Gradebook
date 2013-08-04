@@ -34,7 +34,7 @@
 	<strong>Teacher:</strong>
 	<%= @course.teacher.full_name %>
 <% else %>
-	<%= link_to 'Edit Course Info', edit_semester_course_path(@course) , class: "btn btn-small" %>
+	<%= link_to 'Edit Course Info', edit_semester_course_path(current_semester, @course) , class: "btn btn-small" %>
 <% end %>
 </br>
 </br>
@@ -61,7 +61,7 @@
 					<% if current_user.teacher? %>
 					<td><%= enrollment.letter_grade %></td>
 					<td>
-						<%= form_for enrollment, method: 'patch' do |f| %>
+						<%= form_for enrollment, url: semester_enrollment_path(current_semester, enrollment), method: 'patch' do |f| %>
 							<%= f.select :grade, GradeHelper.letter_grades %>
 							<%= f.submit 'Save' , class: "btn btn-small" %>
 						<% end %>

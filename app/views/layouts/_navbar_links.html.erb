@@ -5,7 +5,8 @@
 <% elsif current_user.teacher? %>
 <li><%= link_to "Manage Courses", semester_courses_path(current_semester) %></li>
 <% elsif current_user.student? %>
-<li><%= link_to "Manage Enrollment", semester_enrollments_path(current_semester) %></li>
+<li><%= link_to "Manage Existing Enrollments", semester_enrollments_path(current_semester) %></li>
+<li><%= link_to "Enroll in Additional Courses", semester_courses_path(current_semester) %></li>
 <% else %>
 <li><%= current_user.full_name if signed_in? %>
 <% end %>

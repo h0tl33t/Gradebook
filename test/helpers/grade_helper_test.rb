@@ -1,8 +1,12 @@
 require 'test_helper'
 
 class GradeHelperTest < ActionView::TestCase
-  test 'grade_table returns hash when no value is passed' do
-    assert_kind_of(Hash, GradeHelper.grade_table, 'Not returning hash when called without parameters.')
+  test 'letter_grade_table returns hash when no value is passed' do
+    assert_kind_of(Hash, GradeHelper.letter_grade_table, 'Not returning hash when called without parameters.')
+  end
+  
+  test 'numeric_grade_table returns hash when no value is passed' do
+    assert_kind_of(Hash, GradeHelper.numeric_grade_table, 'Not returning hash when called without parameters.')
   end
   
   test 'letter_grades returns an array of all valid letter grade values' do
@@ -10,7 +14,7 @@ class GradeHelperTest < ActionView::TestCase
   end
     
   test 'grade_table returns letter grade when given a valid value' do
-    assert_equal 'A', GradeHelper.grade_table(4.0), 'Not returning letter grade when given a valid value.'
+    assert_equal 'A', GradeHelper.letter_grade_table(4.0), 'Not returning letter grade when given a valid value.'
   end
   
   test 'numeric_grade_for returns numeric grade when given a valid letter grade' do
@@ -43,5 +47,16 @@ class GradeHelperTest < ActionView::TestCase
 
   test 'letter_grade_for returns the nearest letter grade when given a decimal grade value between 0.0 and 4.0' do
     assert_equal 'B', GradeHelper.letter_grade_for(2.9), 'Not returning correct nearest letter grade.'
+  end
+  
+  test 'ability to return a random numeric grade' do
+    grade = GradeHelper.random_grade
+    assert (grade.class == Float and (0..4).cover?(grade)), 'Not returning random numeric grade.'
+  end
+  
+  test 'ability to return a random letter grade' do
+    grade = GradeHelper.random_letter_grade
+    assert (grade.class == String and ['A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F'].include?(grade)),
+      'Not returning a random letter grade.'
   end
 end

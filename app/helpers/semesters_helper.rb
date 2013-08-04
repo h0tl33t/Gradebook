@@ -8,7 +8,7 @@ module SemestersHelper
   end
   
   def all_semesters
-    @all_semesters ||= Semester.all
+    @all_semesters ||= Semester.order(:start_date)
   end
   
   def set_semester

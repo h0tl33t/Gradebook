@@ -87,10 +87,11 @@ class StudentTest < ActiveSupport::TestCase
     enrollment4 = FactoryGirl.create(:enrollment, course: course4, student: student, grade: 3.0) #7.5 credit points
     enrollment5 = FactoryGirl.create(:enrollment, course: course5, student: student, grade: 3.7) #14.8 credit points
     
-    courses = Course.where(semester: @semester).joins(:enrollments).where(enrollments: {student: student}).select('courses.*, enrollments.grade as student_grade')
+    #enrollments = Enrollment.includes(:course).where(courses: {semester_id: @semester.id})
+    enrollments = [enrollment1, enrollment2, enrollment3, enrollment4, enrollment5]
     
     #GPA should be credit points (50.3) divided by total credit hours (16.5) with the result rounded to two decimal places => 3.05
-    assert_equal 3.05, student.calculate_gpa_for(courses), 'Not correctly calculating GPA from given courses.'
+    assert_equal 3.05, student.calculate_gpa_with(enrollments), 'Not correctly calculating GPA from given courses.'
   end
 
   test 'GPA is set during courses_for method call' do

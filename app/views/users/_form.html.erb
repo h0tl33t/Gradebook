@@ -1,4 +1,4 @@
-<%= form_for(@user) do |f| %>
+<%= form_for @user do |f| %>
   <% if @user.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
@@ -31,10 +31,12 @@
     <%= f.label :password_confirmation, 'Password Confirmation' %>
     <%= f.password_field :password_confirmation %>
   </div>
+	<% if enable_type_select %>
 	<div class="dropdown">
 		<%= f.label :type %>
-		<%= select(:user, :type, User.types.map {|t| t.to_s}) %>
+		<%= select(:user, :type, User.types.map(&:to_s)) %>
 	</div>
+	<% end %>
 	<br>
   <div class="actions">
     <%= f.submit %>

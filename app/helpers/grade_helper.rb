@@ -1,6 +1,6 @@
 module GradeHelper #Be sure to include :grade in the application control helper listing => helper :grade
   class << self
-    def grade_table(value = nil)
+    def letter_grade_table(value = nil)
       grade_table = {4.0 => 'A',
                      3.7 => 'A-',
                      3.3 => 'B+',
@@ -17,7 +17,7 @@ module GradeHelper #Be sure to include :grade in the application control helper 
       value ? grade_table[value] : grade_table
     end
     
-    def numeric_grade_for(letter_grade)
+    def numeric_grade_table(letter_grade = nil)
       numeric_grades = {'A'   => 4.0,
                         'A-'  => 3.7,
                         'B+'  => 3.3,
@@ -30,15 +30,27 @@ module GradeHelper #Be sure to include :grade in the application control helper 
                         'D'   => 1.0,
                         'D-'  => 0.7,
                         'F'   => 0.0}
-      numeric_grades[letter_grade]
+      letter_grade ? numeric_grades[letter_grade] : numeric_grades
+    end
+    
+    def random_grade
+      numeric_grade_table.values.sample
+    end
+    
+    def random_letter_grade
+      letter_grades.sample
     end
 
     def letter_grades
-      grade_table.values.uniq #Must be unique so 'F' doesn't occur twice, since both 0.3 and 0.0 are assigned an F letter grade.
+      letter_grade_table.values.uniq #Must be unique so 'F' doesn't occur twice, since both 0.3 and 0.0 are assigned an F letter grade.
     end
 
     def letter_grade_for(value)
-      grade_table(value.round(1)) || nearest_letter_grade(value.round(1)) #Looks to see if it matches a grade in the grade table, and looks for the nearest grade if not.
+      letter_grade_table(value.round(1)) || nearest_letter_grade(value.round(1)) #Looks to see if it matches a grade in the grade table, and looks for the nearest grade if not.
+    end
+    
+    def numeric_grade_for(value)
+      numeric_grade_table(value)
     end
 
     def valid?(value) #Checks to see if the grade is within the valid set of ranges (either by float or string)
@@ -52,7 +64,7 @@ module GradeHelper #Be sure to include :grade in the application control helper 
     end
 
     def nearest_letter_grade(value) #Nearest ascendor value in array given value.
-      grade_table(nearest_decimal_grade(value))
+      letter_grade_table(nearest_decimal_grade(value))
     end
 
     def nearest_decimal_grade(value) #Expects a valid grade in type-float that does not match any values in grade_table.

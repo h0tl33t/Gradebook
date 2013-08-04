@@ -1,5 +1,6 @@
 class CoursesController < ApplicationController
   include SessionsHelper
+  include SemestersHelper
   
   before_action :set_course, only: [:show, :edit, :update, :destroy]
   before_action :set_semester, only: [:index]
@@ -8,10 +9,8 @@ class CoursesController < ApplicationController
   # GET /courses
   # GET /courses.json
   def index
-    @semesters = Semester.all
     if current_user.student?
-      #@courses = Course.for_semester(current_semester).joins(:enrollments).where(enrollments: {student: current_user})
-      @courses = current_user.courses_for(current_semester).distinct
+      @courses = Course.for_semester(current_semester).enrollable #Students interact with enrolled courses via enrollment#index.  This returns enrollable courses.
     elsif current_user.teacher?
       @courses = Course.for_semester(current_semester).where(teacher: current_user).includes(:enrolled_students)
     else
@@ -34,23 +33,22 @@ class CoursesController < ApplicationController
   # GET /courses/new
   def new
     @course = Course.new
-    @semesters = Semester.all
+    #@semesters = Semester.all
   end
 
   # GET /courses/1/edit
   def edit
-    @semesters = Semester.all
+    #@semesters = Semester.all
   end
 
   # POST /courses
   # POST /courses.json
   def create
     @course = Course.new(course_params)
-    @semesters = Semester.all
     
     respond_to do |format|
       if @course.save
-        format.html { redirect_to @course, notice: 'Course was successfully created.' }
+        format.html { redirect_to semester_course_path(current_semester, @course), notice: 'Course was successfully created.' }
         format.json { render action: 'show', status: :created, location: @course }
       else
         format.html { render action: 'new' }
@@ -64,7 +62,7 @@ class CoursesController < ApplicationController
   def update
     respond_to do |format|
       if @course.update(course_params)
-        format.html { redirect_to @course, notice: 'Course was successfully updated.' }
+        format.html { redirect_to semester_course_path(current_semester, @course), notice: 'Course was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
@@ -78,7 +76,7 @@ class CoursesController < ApplicationController
   def destroy
     @course.destroy
     respond_to do |format|
-      format.html { redirect_to courses_url }
+      format.html { redirect_to semester_courses_path(current_semester) }
       format.json { head :no_content }
     end
   end
@@ -96,17 +94,7 @@ class CoursesController < ApplicationController
     
     def allow_teacher
       unless current_user.teacher?
-        redirect_to root
+        redirect_to root_path
       end
     end
-    
-    #def set_semester
-    #if params[:semester] && params[:semester][:id]
-    #  self.current_semester = Semester.find(params[:semester][:id])
-    #elsif params[:semester_id]
-    #  self.current_semester = Semester.find(params[:semester_id])
-    #else
-    #  self.current_semester = Semester.current
-    #end
-    #end 
 end
