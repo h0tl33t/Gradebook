@@ -9,9 +9,10 @@ class Course < ActiveRecord::Base
   validates :description, presence: true
   validate :acceptable_value_for_credit_hours
   
-  scope :for_semester, lambda {|semester| where(semester_id: semester).order(:name)}
-  scope :with_grades_for, lambda {|student| joins(:enrollments).where(enrollments: {student: student}).select('courses.*, enrollments.grade as student_grade')}
-  scope :enrollable, lambda { joins(:semester).where('semesters.end_date >= ?', Date.today).references(:semester)} #References required.
+  default_scope order: :name
+  scope :for_semester, lambda {|semester| where(semester_id: semester)}
+  scope :enrollable, lambda {joins(:semester).where('semesters.end_date >= ?', Date.today).references(:semester)} #References required.
+  scope :enrollable_for, lambda {|student, semester| enrollable.where(semester_id: semester.id).joins(:enrollments).where.not(enrollments: {student_id: student.id}).distinct}
 
   def calculate_average_grade #Must be called via callback in EnrollmentsController, triggering from create, update, and destroy actions.
     self.average_grade = enrollments.average(:grade).round(2)
@@ -21,14 +22,12 @@ class Course < ActiveRecord::Base
     GradeHelper.letter_grade_for(average_grade)
   end
   
-  def enrollment_count
+  def enrollment_count #Alias for counter cache on enrollments.
     enrollments.size
   end
   
   def enrollable_for?(student)
-    Enrollment.find_by(course_id: id, student_id: student.id) == nil #Check if enrollment exists for self and a given student.
-    #Accessed in courses#index to only list enrollable student.  Trade-off for usability (being able to see and enroll in courses in a list) versus
-    #having to view an individual course and THEN have the ability to enroll (which would only query whether enrollable or not at the courses#show level).
+    !enrolled_students.include?(student) #Return true if course doesn't have a given student already enrolled.  False if a given student has an enrollment.
   end
   
   private

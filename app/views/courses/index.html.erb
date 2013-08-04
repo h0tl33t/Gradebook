@@ -1,7 +1,9 @@
 <% if current_user.admin? %>
 <h4>Courses for <%= "#{current_semester.name} (#{current_semester.courses.size} Total)"%></h4>
+
 <% elsif current_user.teacher? %>
 <h4>Courses Taught for <%= "#{current_semester.name}" %></h4>
+
 <% elsif current_user.student? %>
 <h4>Courses Available for Enrollment in <%= "#{current_semester.name} Semester" %></h4>
 <% end %>
@@ -39,7 +41,6 @@
 
 	  <tbody>
 	    <% @courses.each do |course| %>
-	      <% if current_user.student? and course.enrollable_for?(current_user) %>
 				<tr>
 	        <td><%= course.name %></td>
 	        <td><%= course.long_title %></td>
@@ -57,6 +58,7 @@
 					<% elsif current_user.student? %>
 					<td><%= link_to 'Enroll', semester_enrollments_path(semester_id: current_semester.id, enrollment: {course_id: course.id, student_id: current_user.id}),
 						method: :create, class: "btn btn-small" %></td>
+						
 					<% end %>
 	        <td><%= link_to 'Show', semester_course_path(current_semester, course), class: "btn btn-small" %></td>
 				
@@ -64,8 +66,8 @@
 					<td><%= link_to 'Delete', semester_course_path(current_semester, course), method: :delete,
 						data: {confirm: 'Are you sure you want to delete this course and all its associated enrollments?'}, class: "btn btn-small" %></td>
 					<% end %>
+					
 	      </tr>
-				<% end %>
 	    <% end %>
 	  </tbody>
 	</table>

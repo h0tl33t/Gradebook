@@ -1,7 +1,4 @@
 class EnrollmentsController < ApplicationController
-  include SessionsHelper
-  include SemestersHelper
-  
   before_action :set_enrollment, only: [:show, :edit, :update, :destroy]
   before_action :set_semester, only: [:index]
   before_action :disallow_admin
@@ -32,8 +29,8 @@ class EnrollmentsController < ApplicationController
   # POST /enrollments
   # POST /enrollments.json
   def create
-    format_letter_grades
-    params[:enrollment][:grade] = GradeHelper.random_grade
+    format_letter_grades #Format letter grade if received in params.
+    params[:enrollment][:grade] = GradeHelper.random_grade #Assign random grade for new enrollments (purely to showcase GPA/grade related functionality).
     @enrollment = Enrollment.new(enrollment_params)
     respond_to do |format|
       if @enrollment.save
@@ -68,7 +65,7 @@ class EnrollmentsController < ApplicationController
   def destroy
     @enrollment.destroy
     respond_to do |format|
-      format.html { redirect_to semester_enrollments_path}
+      format.html { redirect_to semester_enrollments_path, notice: "Unenrolled from #{@enrollment.course.name}."}
       format.json { head :no_content }
     end
   end

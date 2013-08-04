@@ -17,7 +17,9 @@
       <th>Description</th>
       <th>Credit Hours</th>
       <th>Grade</th>
+			<% unless current_semester.over? %>
 			<th></th>
+			<% end %>
     </tr>
   </thead>
 
@@ -30,9 +32,11 @@
         <td><%= enrollment.course.description %></td>
         <td><%= enrollment.course.credit_hours %></td>
 				<td><%= enrollment.letter_grade %></td>
+				<% unless current_semester.over? %>
         <td><%= link_to 'Unenroll', semester_enrollment_path(current_semester, enrollment), method: :delete, 
 					data: {confirm: 'Are you sure you want to unenroll?'}, class: "btn btn-small" %>
 				</td>
+				<% end %>
       </tr>
     <% end %>
   </tbody>
