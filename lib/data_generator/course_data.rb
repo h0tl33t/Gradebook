@@ -2,10 +2,9 @@ module DataGenerator
   class CourseData
     attr_accessor :courses  
       def initialize(options = {})
-      @quantity = options[:quantity] || 1
       @semester_ids = options[:semesters]
       @teacher_ids = options[:teachers]
-      @per_teacher = options[:courses_per_teacher] || @semester_ids.size * 3 #Default to 3 courses for a teacher in a given semester.
+      @per_teacher = options[:courses_per_teacher] || 2 #Default to 3 courses for a teacher in a given semester.
       @random = Random.new
     
       @courses = []
@@ -34,11 +33,14 @@ module DataGenerator
                     'ACC' => 'Accounting',
                     'BUS' => 'Business'}
 
-    def generate_courses_for(teacher_id) #For a given teacher, generate one course per 
-      courses = @semester_ids.sample(@per_teacher).inject([]) do |collection, semester_id|
-        collection << generate_course_data_hash_with(teacher_id, semester_id)
-        collection
+    def generate_courses_for(teacher_id)
+      courses = []
+      @semester_ids.each do |semester_id|
+        @per_teacher.times do
+            courses << generate_course_data_hash_with(teacher_id, semester_id)
+        end
       end
+      courses
     end
     
     def generate_course_data_hash_with(teacher_id, semester_id)

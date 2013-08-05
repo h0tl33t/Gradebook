@@ -35,11 +35,11 @@ module DataGenerator
     end
   
     def all
-      teachers = user(type: Teacher, quantity: 40)
-      students = user(type: Student, quantity: 200)
-      semesters = semester(quantity: 8)
-      courses = course(quantity: 200, semesters: semesters, teachers: teachers)
-      enrollment(students: students, courses: courses, courses_per_student: 40)
+      teachers = user(type: Teacher, quantity: 10)
+      students = user(type: Student, quantity: 150)
+      semesters = semester(quantity: 6)
+      courses = course(semesters: semesters, teachers: teachers) #Should generate number_of_teachers * number_of_semesters * 2 courses. (120 by default)
+      enrollment(students: students, courses: courses, courses_per_student: 30) #Should come out to approximately 5 enrollments per semester.
     end
   
     private
