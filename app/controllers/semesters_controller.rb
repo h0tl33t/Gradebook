@@ -1,6 +1,7 @@
 class SemestersController < ApplicationController
   
   before_action :set_semester, only: [:edit, :update, :destroy]
+  before_action :disallow_non_admin
   
   # GET /semesters
   # GET /semesters.json
@@ -64,13 +65,15 @@ class SemestersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_semester
-      @semester = Semester.find(params[:id])
-    end
+  def set_semester
+    @semester = Semester.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def semester_params
-      params.require(:semester).permit(:name, :start_date, :end_date)
-    end
+  def semester_params
+    params.require(:semester).permit(:name, :start_date, :end_date)
+  end
+    
+  def disallow_non_admin
+    redirect_to root_path unless current_user.admin?
+  end
 end
