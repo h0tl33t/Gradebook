@@ -35,7 +35,7 @@ module DataGenerator
     end
   
     def all
-      teachers = user(type: Teacher, quantity: 50)
+      teachers = user(type: Teacher, quantity: 40)
       students = user(type: Student, quantity: 200)
       semesters = semester(quantity: 8)
       courses = course(quantity: 200, semesters: semesters, teachers: teachers)

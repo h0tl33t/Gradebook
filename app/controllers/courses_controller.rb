@@ -1,4 +1,5 @@
 class CoursesController < ApplicationController  
+  
   before_action :set_course, only: [:show, :edit, :update, :destroy]
   before_action :set_semester, only: [:index]
   before_action :disallow_non_teacher, except: [:index, :show]

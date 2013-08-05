@@ -1,6 +1,4 @@
 class HomeController < ApplicationController
-  include SessionsHelper
-
   def index
     current_courses = Course.where(semester: current_semester)
     @year = Semester.order(:start_date).first.start_date.year

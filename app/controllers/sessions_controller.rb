@@ -1,4 +1,5 @@
 class SessionsController < ApplicationController
+  
   def new
 	end
 
@@ -15,6 +16,7 @@ class SessionsController < ApplicationController
 
 	def destroy
 		sign_out
-		redirect_to root_path, notice: 'Logged out.'
+		flash[:alert] = 'Logged out.'
+		redirect_to root_path
 	end
 end

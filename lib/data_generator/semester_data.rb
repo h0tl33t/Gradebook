@@ -4,7 +4,7 @@ module DataGenerator
   
     def initialize(options = {})
       @quantity = options[:quantity] || 1
-      @days_long = options[:days_long] || 120
+      @days_long = options[:days_long] || 90
     
       @occupied_date_ranges = Semester.order(:start_date).select(:start_date, :end_date).map {|semester| (semester.start_date..semester.end_date)}
       @future = true #Use to swap back and forth, adding a semester in front and then behind, ensuring there's an equal distribution of past and future semesters.   
@@ -18,13 +18,29 @@ module DataGenerator
       name = generate_semester_name(start_date)
       {name: name, start_date: start_date, end_date: end_date}
     end
+    
+    def determine_start_date_for_current_semester
+      case Date.today.month
+      when (6..8) #If today is between the months of June and August, set June 1.
+        Date.parse("01-06-#{Date.today.year}")
+      when (9..11) #if today is between the months of September and November, set September 1.
+        Date.parse("01-09-#{Date.today.year}")
+      when (12) #If today is in December, set December 1.
+        Date.parse("01-12-#{Date.today.year}")
+      when (1..2) #If today is between January and February, set December 1 for the prior year.
+        yr = (Date.today - 1.year).year
+        Date.parse("01-12-#{yr}")
+      when (3..5) #If today is between March and May, set March 1.
+        Date.parse("01-03-#{Date.today.year}")
+      end
+    end
   
     def generate_start_and_end_dates
       start_date, end_date = nil, nil
     
       if @occupied_date_ranges.empty? #No semesters created yet.
-        start_date = (@days_long/2).days.ago
-        end_date = (@days_long/2).days.from_now
+        start_date = determine_start_date_for_current_semester
+        end_date = start_date + @days_long.days
       elsif @future #Current semester already set, tack a new semester on to the end of last semester tracked.
         start_date = @occupied_date_ranges.last.last + 1.day
         end_date = start_date + @days_long.days

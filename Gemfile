@@ -23,6 +23,8 @@ group :doc do
   gem 'sdoc', require: false
 end
 
+gem 'rails_12factor', group: :production #For Heroku deployment of Rails 4 app.
+
 
 
 

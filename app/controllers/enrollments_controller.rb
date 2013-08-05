@@ -1,4 +1,5 @@
 class EnrollmentsController < ApplicationController
+  
   before_action :set_enrollment, only: [:show, :edit, :update, :destroy]
   before_action :set_semester, only: [:index]
   before_action :disallow_admin

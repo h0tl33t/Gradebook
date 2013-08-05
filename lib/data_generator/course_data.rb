@@ -5,7 +5,7 @@ module DataGenerator
       @quantity = options[:quantity] || 1
       @semester_ids = options[:semesters]
       @teacher_ids = options[:teachers]
-      @per_teacher = options[:courses_per_teacher] || @semester_ids.size
+      @per_teacher = options[:courses_per_teacher] || @semester_ids.size * 3 #Default to 3 courses for a teacher in a given semester.
       @random = Random.new
     
       @courses = []
