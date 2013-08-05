@@ -16,7 +16,6 @@ group :development, :test do
   gem 'sqlite3'
   gem 'turn'
   gem 'factory_girl_rails', '~> 4.0'
-  gem 'capybara'
   gem 'pry-rails'
 end
 
