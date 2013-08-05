@@ -1,6 +1,6 @@
 class SemestersController < ApplicationController
   
-  before_action :set_semester, only: [:show, :edit, :update]
+  before_action :set_semester, only: [:edit, :update, :destroy]
   
   # GET /semesters
   # GET /semesters.json
@@ -11,6 +11,7 @@ class SemestersController < ApplicationController
   # GET /semesters/1
   # GET /semesters/1.json
   def show
+    redirect_to semesters_path
   end
 
   # GET /semesters/new
@@ -29,8 +30,8 @@ class SemestersController < ApplicationController
 
     respond_to do |format|
       if @semester.save
-        format.html { redirect_to @semester, notice: 'Semester was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @semester }
+        format.html { redirect_to semesters_path, notice: 'Semester was successfully created.' }
+        format.json { render action: 'show', status: :created, location: semesters_path }
       else
         format.html { render action: 'new' }
         format.json { render json: @semester.errors, status: :unprocessable_entity }
@@ -43,12 +44,22 @@ class SemestersController < ApplicationController
   def update
     respond_to do |format|
       if @semester.update(semester_params)
-        format.html { redirect_to @semester, notice: 'Semester was successfully updated.' }
+        format.html { redirect_to semesters_path, notice: 'Semester was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
         format.json { render json: @semester.errors, status: :unprocessable_entity }
       end
+    end
+  end
+  
+  # DELETE /semesters/1
+  # DELETE /semesters/1.json
+  def destroy
+    @semester.destroy
+    respond_to do |format|
+      format.html { redirect_to semesters_path, notice: 'Semester and all its associated data has been deleted.'}
+      format.json { head :no_content }
     end
   end
 

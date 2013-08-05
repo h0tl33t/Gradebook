@@ -17,8 +17,9 @@
         <td><%= semester.name %></td>
         <td><%= semester.start_date %></td>
         <td><%= semester.end_date %></td>
-        <td><%= link_to 'Show', semester, class: "btn btn-small" %></td>
         <td><%= link_to 'Edit', edit_semester_path(semester), class: "btn btn-small" %></td>
+				<td><%= link_to 'Delete', semester, method: :delete,
+					data: {confirm: 'WARNING: DELETING SEMESTER WILL DELETE ALL ASSOCIATED COURSES AND ENROLLMENTS! Proceed?'}, class: "btn btn-small" %></td>
       </tr>
     <% end %>
   </tbody>

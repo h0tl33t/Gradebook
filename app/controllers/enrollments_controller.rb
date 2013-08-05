@@ -13,20 +13,6 @@ class EnrollmentsController < ApplicationController
     @total_credit_hours = @enrollments.inject(0) {|total, enrollment| total += enrollment.course.credit_hours}
   end
 
-  # GET /enrollments/1
-  # GET /enrollments/1.json
-  def show
-  end
-
-  # GET /enrollments/new
-  def new
-    @enrollment = Enrollment.new
-  end
-
-  # GET /enrollments/1/edit
-  def edit
-  end
-
   # POST /enrollments
   # POST /enrollments.json
   def create

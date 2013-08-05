@@ -1,8 +1,8 @@
 require 'test_helper'
-=begin
+
 class SemestersControllerTest < ActionController::TestCase
   setup do
-    @semester = semesters(:one)
+    @semester = Semester.first
   end
 
   test "should get index" do
@@ -17,16 +17,17 @@ class SemestersControllerTest < ActionController::TestCase
   end
 
   test "should create semester" do
+    new_semester = DataGenerator::Core.new.semester(action: :new)
     assert_difference('Semester.count') do
-      post :create, semester: { end_date: @semester.end_date, name: @semester.name, start_date: @semester.start_date }
+      post :create, semester: { name: new_semester.name, start_date: new_semester.start_date, end_date: new_semester.end_date, }
     end
 
-    assert_redirected_to semester_path(assigns(:semester))
+    assert_redirected_to semesters_path
   end
 
-  test "should show semester" do
+  test "should redirect from show semester" do
     get :show, id: @semester
-    assert_response :success
+    assert_redirected_to semesters_path
   end
 
   test "should get edit" do
@@ -36,7 +37,7 @@ class SemestersControllerTest < ActionController::TestCase
 
   test "should update semester" do
     patch :update, id: @semester, semester: { end_date: @semester.end_date, name: @semester.name, start_date: @semester.start_date }
-    assert_redirected_to semester_path(assigns(:semester))
+    assert response: :success
   end
 
   test "should destroy semester" do
@@ -47,4 +48,3 @@ class SemestersControllerTest < ActionController::TestCase
     assert_redirected_to semesters_path
   end
 end
-=end

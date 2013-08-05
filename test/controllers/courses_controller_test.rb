@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class CoursesControllerTest < ActionController::TestCase
-  include SessionsHelper
+
   setup do
     @course = Course.first
     @semester = @course.semester
@@ -65,7 +65,7 @@ class CoursesControllerTest < ActionController::TestCase
   test "should redirect from show course for student" do
     sign_in(@student)
     get :show, semester_id: @semester.id, id: @course.id
-    assert_redirected_to semester_courses_path(@semester.id)
+    assert_redirected_to semester_courses_path(@current_semester.id)
   end
   
   test "should get edit for teacher" do
@@ -76,10 +76,11 @@ class CoursesControllerTest < ActionController::TestCase
   
   test "should destroy course as teacher" do
     sign_in(@teacher)
+    course_for_destroy = DataGenerator::Core.new.course(semesters: @current_semester).first
     assert_difference('Course.count', -1) do
-      delete :destroy, semester_id: @semester.id, id: @course.id
+      delete :destroy, semester_id: @current_semester.id, id: course_for_destroy.id
     end
 
-    assert_redirected_to semester_courses_path(@semester.id)
+    assert_redirected_to semester_courses_path(@current_semester.id)
   end
 end
