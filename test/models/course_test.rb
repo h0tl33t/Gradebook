@@ -52,8 +52,8 @@ class CourseTest < ActiveSupport::TestCase
   end
   
   test 'can scope by semester' do
-    semester_list = FactoryGirl.create_list(:semester_with_courses, 2) #Generate two semesters, each with a set of courses.
-    assert_equal semester_list.first.courses, Course.for_semester(semester_list.first), 'For semester scope is not pulling correct courses for a given semester.'
+    current_semester = Semester.current
+    assert_equal Course.where(semester_id: current_semester.id), Course.for_semester(current_semester), 'For semester scope is not pulling correct courses for a given semester.'
   end
   
   test 'has many enrollments' do
@@ -104,13 +104,6 @@ class CourseTest < ActiveSupport::TestCase
     enrollment = course.enrollments.first
     course.destroy
     refute Enrollment.exists?(enrollment), 'Not destroying associated enrollments.'
-  end
-  
-  test 'ability to display all enrolled students with their grades as student.grade' do
-    course = FactoryGirl.create(:course_with_enrollments)
-    assert_equal course.enrolled_students.joins(:enrollments).select('users.*, enrollments.grade as grade').to_a,
-      course.enrolled_students.with_grades_for(course),
-      'Not correctly pulling students with grades for a given course.'
   end
   
   test 'calculates correct average grade' do

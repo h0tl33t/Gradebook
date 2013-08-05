@@ -28,13 +28,6 @@ class TeacherTest < ActiveSupport::TestCase
     refute Course.exists?(course), 'Not destroying associated courses when teacher is destroyed.'
   end
   
-  test 'courses_for as a Teacher returns all courses taught for a given semester' do
-    teacher = FactoryGirl.create(:teacher_with_courses)
-    teacher.courses.each {|course| course.semester = @semester}
-    assert_equal Course.where(semester: @semester).where(teacher: teacher).to_a, teacher.courses_for(@semester),
-      'Not pulling all courses taught for a given semester.'
-  end
-  
   test 'teacher is not an admin' do
     teacher = FactoryGirl.create(:teacher)
     refute teacher.admin?, 'Teacher passing as an admin.'

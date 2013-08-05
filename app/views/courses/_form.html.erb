@@ -32,7 +32,7 @@
   </div>
 	<% if enable_semester_select %>
 	<div class="dropdown">
-		<%= f.collection_select(:semester_id, all_semesters, :id, :name) %>
+		<%= f.collection_select(:semester_id, actionable_semesters, :id, :name) %>
 	</div>
 	<% end %>
   <div class="actions">

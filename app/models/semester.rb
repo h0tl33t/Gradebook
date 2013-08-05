@@ -9,6 +9,7 @@ class Semester < ActiveRecord::Base
   
   scope :starts_during, lambda {|semester| where(start_date: (semester.start_date..semester.end_date)).where.not(id: semester.id)}
   scope :ends_during, lambda {|semester| where(end_date: (semester.start_date..semester.end_date)).where.not(id: semester.id)}
+  scope :overlaps, lambda {|semester| where('start_date <= ? and end_date >= ?', semester.start_date, semester.end_date)}
   scope :current, lambda { where('start_date <= ? AND end_date >= ?', Date.today, Date.today).take}
   
   def over? #Determine whether or not a semester is over/in the past.
@@ -17,7 +18,7 @@ class Semester < ActiveRecord::Base
   
   private
   def does_not_overlap
-    unless Semester.starts_during(self).empty? and Semester.ends_during(self).empty?
+    unless Semester.starts_during(self).empty? and Semester.ends_during(self).empty? and Semester.overlaps(self).empty?
       errors.add(:base, 'A semester cannot overlap an existing semester.')
     end
   end

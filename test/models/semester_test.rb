@@ -17,29 +17,37 @@ class SemesterTest < ActiveSupport::TestCase
   end
   
   test 'semester invalid if it starts during another semester' do
-    semester1 = FactoryGirl.create(:semester, start_date: 20.days.ago, end_date: 20.days.from_now)
-    semester2 = FactoryGirl.build(:semester, start_date: 10.days.ago, end_date: 25.days.from_now)
-    refute semester2.valid?, "Not validating start date overlapping an existing semester's range."
+    #Current Semester is seeded to test DB already with a duration of 90 days.  Any short-term semester should fail the overlaps validation.
+    current_semester = Semester.current
+    semester = FactoryGirl.build(:semester, start_date: Date.today, end_date: (current_semester.end_date + 1.day))
+    refute semester.valid?, "Not validating start date overlapping an existing semester's range."
   end
   
   test 'semester invalid if it ends during another semester' do
-    semester2 = FactoryGirl.build(:semester, start_date: 20.days.ago, end_date: 20.days.from_now)
-    semester1 = FactoryGirl.create(:semester, start_date: 25.days.ago, end_date: 10.days.from_now)
-    refute semester2.valid?, "Not validating end date overlapping an existing semester's range."
+    #Current Semester is seeded to test DB already with a duration of 90 days.  Any short-term semester should fail the overlaps validation.
+    current_semester = Semester.current
+    semester = FactoryGirl.build(:semester, start_date: (current_semester.start_date - 1.day), end_date: Date.today)
+    refute semester.valid?, "Not validating end date overlapping an existing semester's range."
+  end
+  
+  test 'semester invalid if it is enveloped by another semester' do
+    #Current Semester is seeded to test DB already with a duration of 90 days.  Any short-term semester should fail the overlaps validation.
+    semester = FactoryGirl.build(:semester, start_date: 5.days.ago, end_date: 5.days.from_now)
+    refute semester.valid?, "Not validating new courses that are enveloped completely by existing semesters."
   end
   
   test 'can have many courses' do
-    semester = FactoryGirl.create(:semester_with_courses)
+    semester = Semester.first
     assert_respond_to(semester, :courses, "Semester 'has_many courses' association not configured correctly.")
   end
   
   test 'has counter_cache on associated courses' do
-    semester = FactoryGirl.create(:semester_with_courses)
+    semester = Semester.first
     assert_respond_to(semester, :courses_count, 'Semester counter_cache on courses not correctly configured.')
   end
   
   test 'destroying semester also destroys related courses' do
-    semester = FactoryGirl.create(:semester_with_courses)
+    semester = Semester.first
     course = semester.courses.first
     semester.destroy
     refute Course.exists?(course), 'Not destroying associated courses when semester is destroyed.'
@@ -53,5 +61,10 @@ class SemesterTest < ActiveSupport::TestCase
   test 'invalid if the end date is before the start date' do
     semester = FactoryGirl.build(:semester, start_date: Date.today, end_date: 10.days.ago)
     refute semester.valid?, 'Allowing semesters to end before they start.'
+  end
+  
+  test 'ability to determine whether a semester is over' do
+    semester = FactoryGirl.build(:semester, start_date: 1.year.ago, end_date: 6.months.ago)
+    assert semester.over?, 'Not correctly identifying semesters that have ended.'
   end
 end

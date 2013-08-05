@@ -73,10 +73,4 @@ class UserTest < ActiveSupport::TestCase
     user = FactoryGirl.create(:user)
     assert user.valid?, 'User not valid with all attributes.'
   end
-  
-  test 'calling courses for a given semester as a User returns all courses for that semester' do
-    user = FactoryGirl.create(:user)
-    semester = Semester.first
-    assert_equal Course.where(semester: semester), user.courses_for(semester), 'Not correctly pulling all courses for a given semester.'
-  end
 end

@@ -11,6 +11,10 @@ module SemestersHelper
     @all_semesters ||= Semester.order(:start_date)
   end
   
+  def actionable_semesters
+    @actionable_semesters ||= Semester.where('end_date >= ?', Date.today)
+  end
+  
   def set_semester
     if params[:semester] && params[:semester][:id] #Catch new semester if one is picked from form_for :semester collection_select :id.
       self.current_semester = Semester.find(params[:semester][:id])
