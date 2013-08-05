@@ -27,7 +27,7 @@ class CoursesControllerTest < ActionController::TestCase
   end
 
   test "should show course" do
-    get :show, id: @course
+    get :show, url: semester_course_path(semester_id: @semester.id, course_id: @course.id)
     assert_response :success
   end
 

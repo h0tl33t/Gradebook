@@ -10,7 +10,7 @@
 
 <%= render 'semesters/select', current_controller: 'courses' %>
 
-<% if @courses.empty? and current_user.student? %>
+<% if @courses.empty? and current_semester.over? and current_user.student? %>
 <%= flash.now[:info] = 'Enrollment is closed for past semesters.' %>
 <% else %>
 	<table class="table table-bordered table-striped table-hover">
