@@ -27,3 +27,5 @@ Course seed data is automatically generated with variety in mind rather than pla
 
 Semester seed data is automatically generated in 90-day increments, assigning a season-year name by approximating based on the mid-point of the semester.  Again, the focus was on creating a span of semesters where validations could be observed/tested rather than having true-to-life standard Fall/Spring/Summer semesters (which usually vary in duration).
 
+Teachers are practically omniscient, being able to teach anything (another fun by-product of variety in seed data)!
+

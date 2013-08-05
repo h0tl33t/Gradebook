@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
 gem 'rails', '4.0.0'
-gem 'sqlite3'
 gem 'sass-rails', '~> 4.0.0'
 gem 'bootstrap-sass'
 gem 'uglifier', '>= 1.3.0' #Compressor for JavaScript assests
@@ -12,10 +11,15 @@ gem 'jbuilder', '~> 1.2' #For building JSON APIs (https://github.com/rails/jbuil
 gem 'bcrypt-ruby', '~> 3.0.0', require: 'bcrypt'
 
 group :development, :test do
+  gem 'sqlite3'
   gem 'turn'
   gem 'factory_girl_rails', '~> 4.0'
   gem 'capybara'
   gem 'pry-rails'
+end
+
+group :production do
+  gem 'pg'
 end
 
 group :doc do

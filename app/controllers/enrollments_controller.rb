@@ -52,7 +52,8 @@ class EnrollmentsController < ApplicationController
     format_letter_grades
     respond_to do |format|
       if @enrollment.update(enrollment_params)
-        format.html { redirect_to semester_course_path(current_semester, @enrollment.course), notice: 'Enrollment was successfully updated.'}
+        format.html { redirect_to semester_course_path(current_semester, @enrollment.course),
+          notice: "Successfully updated #{@enrollment.student.full_name}'s grade to #{GradeHelper.letter_grade_for(@enrollment.grade)}."}
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }

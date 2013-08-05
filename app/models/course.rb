@@ -9,7 +9,7 @@ class Course < ActiveRecord::Base
   validates :description, presence: true
   validate :acceptable_value_for_credit_hours
   
-  default_scope order: :name
+  default_scope -> {order(:name)}
   scope :for_semester, lambda {|semester| where(semester_id: semester)}
   scope :enrollable, lambda {joins(:semester).where('semesters.end_date >= ?', Date.today).references(:semester)} #References required for SQL-where clause.
   scope :enrollable_for, lambda {|student, semester| enrollable.where(semester_id: semester.id).joins(:enrollments).where.not(enrollments: {student_id: student.id}).distinct}

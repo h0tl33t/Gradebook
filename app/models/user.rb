@@ -14,10 +14,6 @@ class User < ActiveRecord::Base
     [first_name, last_name].join(' ')
   end
   
-  def courses_for(semester)
-    Course.for_semester(semester)
-  end
-  
   def self.types
     [Admin, Teacher, Student]
   end
