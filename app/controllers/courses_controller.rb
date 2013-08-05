@@ -9,7 +9,7 @@ class CoursesController < ApplicationController
   # GET /courses.json
   def index
     if current_user.student?
-      @courses = Course.enrollable_for(current_user, current_semester) + Course.without_enrollments
+      @courses = Course.for_semester(current_semester) + Course.without_enrollments - Course.not_enrollable_for(current_user)
       #Enrollable courses (not yet enrolled in for student) for a given semester or courses newly created without enrollments (needed separate query to catch these.)
     elsif current_user.teacher?
       @courses = Course.for_semester(current_semester).where(teacher: current_user).includes(:enrolled_students) #Courses taught for teacher in given semester.
