@@ -1,5 +1,4 @@
 class UsersController < ApplicationController
-  include SessionsHelper
   
   before_action :set_user, only: [:show, :edit, :update, :destroy]
   before_action :admin_only, only: [:index]
