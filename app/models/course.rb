@@ -11,7 +11,7 @@ class Course < ActiveRecord::Base
   
   default_scope -> {order(:name)}
   scope :for_semester, lambda {|semester| where(semester_id: semester)}
-  scope :enrollable, lambda {joins(:semester).where('semesters.end_date >= ?', Date.today)}
+  scope :enrollable, lambda {joins(:semester).where('semesters.end_date >= ?', Date.today).includes(:teacher)}
   scope :not_enrollable_for, lambda {|student| joins(:enrollments).where(enrollments: {student_id: student.id})}
   scope :without_enrollments, lambda {where(enrollments_count: 0)}
 

@@ -29,3 +29,10 @@ Semester seed data is automatically generated in 90-day increments, assigning a 
 
 Teachers are practically omniscient, being able to teach anything (another fun by-product of variety in seed data)!
 
+## Test Account Information
+When first logging on, use the seeded administrator account:
+* Email: usurping@gmail.com
+* Password: sekretz
+
+To test Teacher and Student functionality, grab an email address for each type from the "Users" page after you're logged in as the above admin.  The default passwords are all seeded to 'sekretz'.
+
