@@ -21,7 +21,7 @@ class Student < User
       values[:credit_hours] += enrollment.course.credit_hours
       values
     end
-    self.gpa = (values[:credit_points]/values[:credit_hours]).round(2)
+    self.gpa = (values[:credit_points]/values[:credit_hours]).round(2) unless values[:credit_hours] == 0
   end
   
   def student?

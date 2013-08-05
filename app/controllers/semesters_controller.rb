@@ -1,6 +1,6 @@
 class SemestersController < ApplicationController
   
-  before_action :set_semester, only: [:show, :edit, :update, :destroy]
+  before_action :set_semester, only: [:show, :edit, :update]
   
   # GET /semesters
   # GET /semesters.json
@@ -49,16 +49,6 @@ class SemestersController < ApplicationController
         format.html { render action: 'edit' }
         format.json { render json: @semester.errors, status: :unprocessable_entity }
       end
-    end
-  end
-
-  # DELETE /semesters/1
-  # DELETE /semesters/1.json
-  def destroy
-    @semester.destroy
-    respond_to do |format|
-      format.html { redirect_to semesters_url }
-      format.json { head :no_content }
     end
   end
 

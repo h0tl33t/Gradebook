@@ -2,13 +2,15 @@ class CoursesController < ApplicationController
   
   before_action :set_course, only: [:show, :edit, :update, :destroy]
   before_action :set_semester, only: [:index]
-  before_action :disallow_non_teacher, except: [:index, :show]
+  before_action :disallow_student, except: [:index]
+  before_action :disallow_admin, except: [:index, :show]
   
   # GET /courses
   # GET /courses.json
   def index
     if current_user.student?
-      @courses = Course.enrollable_for(current_user, current_semester) #Enrollable courses (not yet enrolled in for student) for a given semester.
+      @courses = Course.enrollable_for(current_user, current_semester) + Course.without_enrollments
+      #Enrollable courses (not yet enrolled in for student) for a given semester or courses newly created without enrollments (needed separate query to catch these.)
     elsif current_user.teacher?
       @courses = Course.for_semester(current_semester).where(teacher: current_user).includes(:enrolled_students) #Courses taught for teacher in given semester.
     else
@@ -88,7 +90,11 @@ class CoursesController < ApplicationController
     params.require(:course).permit(:name, :long_title, :description, :credit_hours, :semester_id, :teacher_id)
   end
     
-  def disallow_non_teacher
-    redirect_to semester_courses_path(current_semester) unless current_user.teacher?
+  def disallow_admin
+    redirect_to semester_courses_path(current_semester) if current_user.admin?
+  end
+  
+  def disallow_student
+    redirect_to semester_courses_path(current_semester) if current_user.student?
   end
 end

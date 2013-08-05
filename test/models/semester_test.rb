@@ -46,13 +46,6 @@ class SemesterTest < ActiveSupport::TestCase
     assert_respond_to(semester, :courses_count, 'Semester counter_cache on courses not correctly configured.')
   end
   
-  test 'destroying semester also destroys related courses' do
-    semester = Semester.first
-    course = semester.courses.first
-    semester.destroy
-    refute Course.exists?(course), 'Not destroying associated courses when semester is destroyed.'
-  end
-  
   test 'current scope returns semester that overlaps Date.today' do
     current_semester = Semester.current
     assert (current_semester.start_date..current_semester.end_date).cover?(Date.today), 'Current scope not pulling semester covering Date.today.'

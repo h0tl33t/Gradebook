@@ -34,7 +34,6 @@
 			
 				<% elsif current_user.student? %>
 				<th></th>
-				<th></th>
 				<% end %>
 	    </tr>
 	  </thead>
@@ -50,17 +49,19 @@
 					<% if current_user.admin? %>
 					<td><%= course.enrollment_count %></td>
 					<td><%= course.average_letter_grade %></td>
-				
+					<td><%= link_to 'Show', semester_course_path(current_semester, course), class: "btn btn-small" %></td>
+					
 					<% elsif current_user.teacher? %>
 					<td><%= course.enrollment_count %></td>
 					<td><%= course.average_letter_grade %></td>
-				
+					<td><%= link_to 'Show', semester_course_path(current_semester, course), class: "btn btn-small" %></td>
+					
 					<% elsif current_user.student? %>
 					<td><%= link_to 'Enroll', semester_enrollments_path(semester_id: current_semester.id, enrollment: {course_id: course.id, student_id: current_user.id}),
 						method: :create, class: "btn btn-small" %></td>
 						
 					<% end %>
-	        <td><%= link_to 'Show', semester_course_path(current_semester, course), class: "btn btn-small" %></td>
+
 				
 					<% if current_user.teacher? %>
 					<td><%= link_to 'Delete', semester_course_path(current_semester, course), method: :delete,
