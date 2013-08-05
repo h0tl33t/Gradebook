@@ -8,7 +8,6 @@
       <th>End date</th>
       <th></th>
       <th></th>
-      <th></th>
     </tr>
   </thead>
 
@@ -20,7 +19,6 @@
         <td><%= semester.end_date %></td>
         <td><%= link_to 'Show', semester, class: "btn btn-small" %></td>
         <td><%= link_to 'Edit', edit_semester_path(semester), class: "btn btn-small" %></td>
-        <td><%= link_to 'Destroy', semester, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-small" %></td>
       </tr>
     <% end %>
   </tbody>

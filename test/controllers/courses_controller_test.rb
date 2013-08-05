@@ -1,14 +1,16 @@
 require 'test_helper'
-=begin
+
 class CoursesControllerTest < ActionController::TestCase
   setup do
-    @course = courses(:one)
+    @course = Course.first
+    @semester = @course.semester
+    @teacher = @course.teacher
   end
 
   test "should get index" do
     get :index
     assert_response :success
-    assert_not_nil assigns(:courses)
+    assert_not_nil semester_course_path(@semester, assigns(:courses))
   end
 
   test "should get new" do
@@ -18,10 +20,10 @@ class CoursesControllerTest < ActionController::TestCase
 
   test "should create course" do
     assert_difference('Course.count') do
-      post :create, course: { credit_hours: @course.credit_hours, description: @course.description, long_title: @course.long_title, name: @course.name }
+      post :create, course: { credit_hours: 2.0, description: 'Description', long_title: 'Long Title', name: 'Test Course', teacher_id: @teacher.id, semester_id: @semester.id}
     end
 
-    assert_redirected_to course_path(assigns(:course))
+    assert_redirected_to semester_course_path(@semester.id, assigns(:course))
   end
 
   test "should show course" do
@@ -35,8 +37,8 @@ class CoursesControllerTest < ActionController::TestCase
   end
 
   test "should update course" do
-    patch :update, id: @course, course: { credit_hours: @course.credit_hours, description: @course.description, long_title: @course.long_title, name: @course.name }
-    assert_redirected_to course_path(assigns(:course))
+    patch :update, id: @course, course: { credit_hours: 4.0, description: @course.description, long_title: @course.long_title, name: @course.name }
+    assert_redirected_to semester_course_path(@semester.id, assigns(:course))
   end
 
   test "should destroy course" do
@@ -47,4 +49,3 @@ class CoursesControllerTest < ActionController::TestCase
     assert_redirected_to courses_path
   end
 end
-=end
