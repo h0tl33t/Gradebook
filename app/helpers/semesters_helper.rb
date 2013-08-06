@@ -1,6 +1,6 @@
 module SemestersHelper
   def current_semester
-    @current_semester ||= Semester.current
+    @current_semster ||= Semester.current
   end
   
   def current_semester=(semester)
