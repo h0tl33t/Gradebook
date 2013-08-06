@@ -27,7 +27,11 @@
 
 <p>
   <strong>Average Grade:</strong>
-  <%= "#{@course.average_grade} (#{@course.average_letter_grade})" %>
+  <% unless @course.enrollment_count == 0 %>
+    <%= "#{@course.average_grade} (#{@course.average_letter_grade})" %>
+  <% else %>
+    <%= "Unavailable - there are no enrollments for this course." %>
+  <% end %>
 </p>
 
 <% if current_user.admin? %>
