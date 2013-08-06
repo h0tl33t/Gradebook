@@ -29,6 +29,9 @@ Semester seed data is automatically generated in 90-day increments, assigning a 
 
 Teachers are practically omniscient, being able to teach anything (another fun by-product of variety in seed data)!
 
+## Application Start-Up
+After running bundle install and rake db:migrate, also run rake db:seed to create the default Admin account and trigger the DataGenerator (creates a bunch of data for testing).
+
 ## Test Account Information
 When first logging on, use the seeded administrator account:
 * Email: usurping@test.com
