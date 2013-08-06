@@ -74,7 +74,6 @@ class UsersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_user
       begin
         @user = User.find(params[:id])
@@ -90,12 +89,11 @@ class UsersController < ApplicationController
     end
     
     def correct_user
-  		unless current_user == @user or current_user.admin?
-    		redirect_to root_path, :notice => 'You are not authorized to view that page.'
-		  end
+      unless current_user == @user or current_user.admin?
+        redirect_to root_path, :notice => 'You are not authorized to view that page.'
+      end
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
       params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :type)
       #Allowing :type for sample app to simplify testing.  

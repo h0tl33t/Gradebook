@@ -25,8 +25,8 @@ class EnrollmentsController < ApplicationController
         format.json { render action: 'show', status: :created, location: @enrollment }
       else
         format.html { 
-            flash.now[:error] = 'Enrollment was unsuccessful.'
-            redirect_to semester_courses_path(current_semester) }
+          flash.now[:error] = 'Enrollment was unsuccessful.'
+          redirect_to semester_courses_path(current_semester) }
         format.json { render json: @enrollment.errors, status: :unprocessable_entity }
       end
     end

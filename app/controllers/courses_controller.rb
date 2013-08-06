@@ -80,21 +80,19 @@ class CoursesController < ApplicationController
   end
 
   private
-  # Use callbacks to share common setup or constraints between actions.
-  def set_course
-    @course = Course.find(params[:id])
-  end
+    def set_course
+      @course = Course.find(params[:id])
+    end
 
-  # Never trust parameters from the scary internet, only allow the white list through.
-  def course_params
-    params.require(:course).permit(:name, :long_title, :description, :credit_hours, :semester_id, :teacher_id)
-  end
+    def course_params
+      params.require(:course).permit(:name, :long_title, :description, :credit_hours, :semester_id, :teacher_id)
+    end
     
-  def disallow_admin
-    redirect_to semester_courses_path(current_semester) if current_user.admin?
-  end
+    def disallow_admin
+      redirect_to semester_courses_path(current_semester) if current_user.admin?
+    end
   
-  def disallow_student
-    redirect_to semester_courses_path(current_semester) if current_user.student?
-  end
+    def disallow_student
+      redirect_to semester_courses_path(current_semester) if current_user.student?
+    end
 end
