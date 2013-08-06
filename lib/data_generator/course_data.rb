@@ -99,7 +99,7 @@ module DataGenerator
     end
 
     def meridian_indicator(hour) #Assuming course schedule with valid class start hours between 8AM and 5PM.
-      (8..12).cover?(hour) ? 'AM' : 'PM'
+      (8..11).cover?(hour) ? 'AM' : 'PM'
     end
 
     def location
