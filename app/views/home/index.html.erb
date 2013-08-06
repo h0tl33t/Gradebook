@@ -1,12 +1,12 @@
 <header id="overview" class="jumbotron subhead">
-	<h2>Welcome to the Ruby University Gradebook!</h2>
-	<%= render 'statistics' %>
-	<% if signed_in? %>
-		<div class="alert alert-info">
-			You are signed in as <%= "#{current_user.full_name} (#{current_user.class})." %>
-		</div>
-	<% else %>
-		<p>Please log in or create an account to see more.</p>
-		<%= link_to "New Account", new_user_path, class: "btn" %>
-	<% end %>
+  <h2>Welcome to the Ruby University Gradebook!</h2>
+  <%= render 'statistics' %>
+  <% if signed_in? %>
+  <div class="alert alert-info">
+    You are signed in as <%= "#{current_user.full_name} (#{current_user.class})." %>
+  </div>
+  <% else %>
+  <p>Please log in or create an account to see more.</p>
+  <%= link_to "New Account", new_user_path, class: "btn" %>
+  <% end %>
 </header>

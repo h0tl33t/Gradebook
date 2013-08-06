@@ -1,10 +1,10 @@
 <% if signed_in? %>
-	<li><%= link_to "My Profile", user_path(current_user) %></li>
-	<li><%= link_to "Sign Out", signout_path %></li>
+  <li><%= link_to "My Profile", user_path(current_user) %></li>
+  <li><%= link_to "Sign Out", signout_path %></li>
 <% else %>
-	<%= form_for :session, url: sessions_path do |f| %>
-		<%= f.email_field :email, placeholder: "Email", class: "input" %>
-		<%= f.password_field :password, placeholder: "Password", class: "input" %>
-		<%= f.submit "Sign In", class: "btn btn-small" %>
-	<% end %>
+  <%= form_for :session, url: sessions_path do |f| %>
+    <%= f.email_field :email, placeholder: "Email", class: "input" %>
+    <%= f.password_field :password, placeholder: "Password", class: "input" %>
+    <%= f.submit "Sign In", class: "btn btn-small" %>
+  <% end %>
 <% end %>

@@ -23,21 +23,21 @@
     <%= f.label :email %>
     <%= f.text_field :email %>
   </div>
-	<div class="field">
+  <div class="field">
     <%= f.label :password %>
     <%= f.password_field :password %>
   </div>
-	<div class="field">
+  <div class="field">
     <%= f.label :password_confirmation, 'Password Confirmation' %>
     <%= f.password_field :password_confirmation %>
   </div>
-	<% if enable_type_select %>
-	<div class="dropdown">
-		<%= f.label :type %>
-		<%= select(:user, :type, User.types.map(&:to_s)) %>
-	</div>
-	<% end %>
-	<br>
+  <% if enable_type_select %>
+  <div class="dropdown">
+    <%= f.label :type %>
+    <%= select(:user, :type, User.types.map(&:to_s)) %>
+  </div>
+  <% end %>
+  <br>
   <div class="actions">
     <%= f.submit %>
   </div>

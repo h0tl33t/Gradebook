@@ -65,7 +65,7 @@ class CoursesControllerTest < ActionController::TestCase
   test "should redirect from show course for student" do
     sign_in(@student)
     get :show, semester_id: @semester.id, id: @course.id
-    assert_redirected_to semester_courses_path(@current_semester.id)
+    assert_redirected_to semester_courses_path(@semester.id)
   end
   
   test "should get edit for teacher" do

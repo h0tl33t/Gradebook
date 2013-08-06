@@ -1,8 +1,12 @@
 require 'test_helper'
 
 class SemestersControllerTest < ActionController::TestCase
+  include SessionsHelper
+  
   setup do
     @semester = Semester.first
+    @admin = Admin.first
+    sign_in(@admin)
   end
 
   test "should get index" do

@@ -1,10 +1,10 @@
 <% if current_user.admin? %>
-<li><%= link_to "Manage Semesters", semesters_path %></li>
-<li><%= link_to "Courses", semester_courses_path(current_semester) %></li>
-<li><%= link_to "Users", users_path %></li>
+  <li><%= link_to "Manage Semesters", semesters_path %></li>
+  <li><%= link_to "Courses", semester_courses_path(current_semester) %></li>
+  <li><%= link_to "Users", users_path %></li>
 <% elsif current_user.teacher? %>
-<li><%= link_to "Manage Courses", semester_courses_path(current_semester) %></li>
+  <li><%= link_to "Manage Courses", semester_courses_path(current_semester) %></li>
 <% elsif current_user.student? %>
-<li><%= link_to "Manage Existing Enrollments", semester_enrollments_path(current_semester) %></li>
-<li><%= link_to "Enroll in Additional Courses", semester_courses_path(current_semester) %></li>
+  <li><%= link_to "Manage Existing Enrollments", semester_enrollments_path(current_semester) %></li>
+  <li><%= link_to "Enroll in Additional Courses", semester_courses_path(current_semester) %></li>
 <% end %>

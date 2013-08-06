@@ -1,12 +1,11 @@
 class CoursesController < ApplicationController  
+  include SemestersHelper
   
   before_action :set_course, only: [:show, :edit, :update, :destroy]
   before_action :set_semester, only: [:index]
   before_action :disallow_student, except: [:index]
   before_action :disallow_admin, except: [:index, :show]
   
-  # GET /courses
-  # GET /courses.json
   def index
     if current_user.student?
       @courses = Course.for_semester(current_semester).enrollable - Course.for_semester(current_semester).not_enrollable_for(current_user)
@@ -18,8 +17,6 @@ class CoursesController < ApplicationController
     end
   end
 
-  # GET /courses/1
-  # GET /courses/1.json
   def show
     if current_user.teacher?
       @course = Course.includes(enrollments: :student).find(params[:id]) #Pull courses with student info and enrollments to list students w/ grades.
@@ -30,53 +27,33 @@ class CoursesController < ApplicationController
     end
   end
 
-  # GET /courses/new
   def new
     @course = Course.new
   end
 
-  # GET /courses/1/edit
   def edit
   end
 
-  # POST /courses
-  # POST /courses.json
   def create
     @course = Course.new(course_params)
-    
-    respond_to do |format|
-      if @course.save
-        format.html { redirect_to semester_course_path(current_semester, @course), notice: 'Course was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @course }
-      else
-        format.html { render action: 'new' }
-        format.json { render json: @course.errors, status: :unprocessable_entity }
-      end
+    if @course.save
+      redirect_to semester_course_path(current_semester, @course), notice: 'Course was successfully created.'
+    else
+      render action: 'new'
     end
   end
 
-  # PATCH/PUT /courses/1
-  # PATCH/PUT /courses/1.json
   def update
-    respond_to do |format|
-      if @course.update(course_params)
-        format.html { redirect_to semester_course_path(current_semester, @course), notice: 'Course was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @course.errors, status: :unprocessable_entity }
-      end
+    if @course.update(course_params)
+      redirect_to semester_course_path(current_semester, @course), notice: 'Course was successfully updated.'
+    else
+      render action: 'edit'
     end
   end
-
-  # DELETE /courses/1
-  # DELETE /courses/1.json
+  
   def destroy
     @course.destroy
-    respond_to do |format|
-      format.html { redirect_to semester_courses_path(current_semester) }
-      format.json { head :no_content }
-    end
+    redirect_to semester_courses_path(current_semester)
   end
 
   private

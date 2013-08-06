@@ -1,11 +1,11 @@
 <h4>Enrolled Courses for <%= current_semester.name %></h4>
 <p>
-	<strong>Credit Hours for Semester:</strong>
-	<%= @total_credit_hours %>
+  <strong>Credit Hours for Semester:</strong>
+  <%= @total_credit_hours %>
 </p>
 <p>
-	<strong>GPA:</strong>
-	<%= current_user.gpa %>
+  <strong>GPA:</strong>
+  <%= current_user.gpa %>
 </p>
 
 <table class="table table-bordered table-striped table-hover">
@@ -13,14 +13,14 @@
     <tr>
       <th>Name</th>
       <th>Long Title</th>
-			<th>Teacher</th>
+      <th>Teacher</th>
       <th>Description</th>
       <th>Credit Hours</th>
       <th>Grade</th>
-			<% unless current_semester.over? %>
-			<th></th>
-			<% end %>
-    </tr>
+      <% unless current_semester.over? %>
+      <th></th>
+      <% end %>
+      </tr>
   </thead>
 
   <tbody>
@@ -28,15 +28,15 @@
       <tr>
         <td><%= enrollment.course.name %></td>
         <td><%= enrollment.course.long_title %></td>
-				<td><%= enrollment.course.teacher.full_name %></td>
+        <td><%= enrollment.course.teacher.full_name %></td>
         <td><%= enrollment.course.description %></td>
         <td><%= enrollment.course.credit_hours %></td>
-				<td><%= enrollment.letter_grade %></td>
-				<% unless current_semester.over? %>
+        <td><%= enrollment.letter_grade %></td>
+        <% unless current_semester.over? %>
         <td><%= link_to 'Unenroll', semester_enrollment_path(current_semester, enrollment), method: :delete, 
-					data: {confirm: 'Are you sure you want to unenroll?'}, class: "btn btn-small" %>
-				</td>
-				<% end %>
+          data: {confirm: 'Are you sure you want to unenroll?'}, class: "btn btn-small" %>
+        </td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>

@@ -1,4 +1,4 @@
 <%= form_for :semester, controller: current_controller, action: 'index', method: :get, class: "dropdown" do |f| %>
-	<h5>View Courses for a Different Semester: <%= f.collection_select :id, all_semesters, :id, :name %>
-		<%= f.submit 'Go', class: "btn"	%></h5>
+  <h5>View Courses for a Different Semester: <%= f.collection_select :id, all_semesters, :id, :name %>
+  <%= f.submit 'Go', class: "btn"	%></h5>
 <% end %>
